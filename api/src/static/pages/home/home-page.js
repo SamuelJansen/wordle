@@ -227,29 +227,24 @@ const resetIfNeeded = () => {
                 });
                 keyboard.append(keyboardLine)
             })
-            return initialState
+            return currentBody.guessStates.forEach((guess, guessIndex) => {
+                guess.guessStateRowList.forEach((guessLetter, guessLetterIndex) => {
+                    guessDataRows[guess.id][guessLetter.id] = guessLetter.key
+                    guessElementLetter = findGuessElementLetterByRowIndexAndLetterIndex(guess.id, guessLetter.id)
+                    guessElementLetter.textContent = guessLetter.key
+                    guessElementLetter.setAttribute('typed-letter', guessLetter.key)
+                });
+            });
+            currentGuessRowIndex = initialState.length
+            return flipAllGuessLetters(initialState)
+            // return initialState
         })
-        .then((initialState) => {
-            try {
-                sleep(SMALL_TIMEOUT)
-                    .then(() => {
-                        console.log(initialState)
-                        currentBody.guessStates.forEach((guess, guessIndex) => {
-                            guess.guessStateRowList.forEach((guessLetter, guessLetterIndex) => {
-                                guessDataRows[guess.id][guessLetter.id] = guessLetter.key
-                                guessElementLetter = findGuessElementLetterByRowIndexAndLetterIndex(guess.id, guessLetter.id)
-                                guessElementLetter.textContent = guessLetter.key
-                                guessElementLetter.setAttribute('typed-letter', guessLetter.key)
-                            });
-                        });
-                        currentGuessRowIndex = initialState.length
-                        return flipAllGuessLetters(initialState)
-                    })
-            } catch (error) {
-                console.log(error)
-                return setTimeout(() => resetIfNeeded(), SMALL_TIMEOUT)
-            }
-        })
+        // .then((initialState) => {
+        //     sleep(SMALL_TIMEOUT)
+        //         .then(() => {
+        //
+        //         })
+        // })
 
 
 }
