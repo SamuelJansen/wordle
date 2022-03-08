@@ -225,9 +225,7 @@ const resetIfNeeded = () => {
         })
         .then((initialState) => {
             try {
-                if (!initialState) {
-                    sleep(3 * SMALL_TIMEOUT)
-                }
+                sleep(3 * SMALL_TIMEOUT)
                 console.log(initialState)
                 initialState.forEach((guess, guessIndex) => {
                     guess.guessStateRowList.forEach((guessLetter, guessLetterIndex) => {
