@@ -9,7 +9,7 @@ class SessionController:
     @ControllerMethod(url = '/authenticate',
         responseClass = [SessionDto.SessionResponseDto]
         # , logRequest = True
-        # , logResponse = True
+        , logResponse = True
     )
     def post(self):
         return self.service.game.createContext(), HttpStatus.CREATED
