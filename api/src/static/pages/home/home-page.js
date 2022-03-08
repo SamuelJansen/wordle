@@ -181,8 +181,9 @@ const resetIfNeeded = () => {
         .then((body) => {
             wordSize = body.wordSize
             totalGuesses = body.totalGuesses
-            return body.guessStates
+            return body
         })
+        .then((body) => body.guessStates)
         .then((initialState) => {
             guessDataRows.forEach((guessRowContent, guessRowIndex) => {
                 oldGuessRow = document.querySelector('#guess-row-' + guessRowIndex)
