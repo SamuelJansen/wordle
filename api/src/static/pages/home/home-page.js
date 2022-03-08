@@ -223,7 +223,10 @@ const resetIfNeeded = () => {
             return initialState
         })
         .then((initialState) => {
-            await initialState.forEach((guess, guessIndex) => {
+            while(!initialState) {
+                continue
+            }
+            initialState.forEach((guess, guessIndex) => {
                 guess.guessStateRowList.forEach((guessLetter, guessLetterIndex) => {
                     guessDataRows[guess.id][guessLetter.id] = guessLetter.key
                     guessElementLetter = findGuessElementLetterByRowIndexAndLetterIndex(guess.id, guessLetter.id)
