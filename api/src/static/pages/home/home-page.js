@@ -220,6 +220,9 @@ const resetIfNeeded = () => {
                 });
                 keyboard.append(keyboardLine)
             })
+            return initialState
+        })
+        .then((initialState) => {
             initialState.forEach((guess, guessIndex) => {
                 guess.guessStateRowList.forEach((guessLetter, guessLetterIndex) => {
                     guessDataRows[guess.id][guessLetter.id] = guessLetter.key
