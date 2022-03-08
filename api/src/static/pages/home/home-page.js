@@ -4,6 +4,7 @@ const messageDisplay = document.querySelector('.message-container')
 
 const WORDLE_API_BASE_URL = `${document.URL}/api`
 const DEFAULT_REQUEST_TIMEOUT = 5000
+const SMALL_TIMEOUT = DEFAULT_REQUEST_TIMEOUT / 5
 const DEFAULT_ANIMATION_TIMEOUT = 200
 const DEFAULT_MESSAGE_TIME_DURATIONT = 5000
 const HEADER_SESSION_KEY = 'Context'
@@ -224,6 +225,8 @@ const resetIfNeeded = () => {
         })
         .then((initialState) => {
             try {
+                sleep(2 * SMALL_TIMEOUT)
+                console.log(initialState)
                 initialState.forEach((guess, guessIndex) => {
                     guess.guessStateRowList.forEach((guessLetter, guessLetterIndex) => {
                         guessDataRows[guess.id][guessLetter.id] = guessLetter.key
@@ -233,13 +236,17 @@ const resetIfNeeded = () => {
                     });
                 });
                 currentGuessRowIndex = initialState.length
-                flipAllGuessLetters(initialState)
+                return flipAllGuessLetters(initialState)
             } catch (error) {
-                return resetIfNeeded()
+                return setTimeout(() => resetIfNeeded(), SMALL_TIMEOUT)
             }
         })
 
 
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 const checkRow = () => {
@@ -268,7 +275,6 @@ const checkRow = () => {
                             gameIsOver = true
                             showMessage('Perfect!')
                                 .then(() => resetIfNeeded())
-
                         } else {
                             // console.log(`currentGuessRowIndex: ${currentGuessRowIndex}, totalGuesses: ${totalGuesses}, body.step: ${body.step}`)
                             if (currentGuessRowIndex >= totalGuesses || body.step == 'LOSS') {
