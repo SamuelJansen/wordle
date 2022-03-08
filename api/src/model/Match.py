@@ -4,6 +4,7 @@ from python_framework import ConverterStatic
 from ModelAssociation import USER, MATCH, GUESS, MODEL
 from util import AuditoryUtil, ModelUtil
 from constant import MatchConstant
+from config import MatchConfig
 from enumeration.MatchStep import MatchStep
 
 
@@ -20,7 +21,7 @@ class Match(MODEL):
     id = sap.Column(sap.Integer(), sap.Sequence(f'{__tablename__}{sap.ID}{sap.SEQ}'), primary_key=True)
     context = sap.Column(sap.String(GIANT_STRING_SIZE), nullable=False)
     word = sap.Column(sap.String(LITTLE_STRING_SIZE), nullable=False)
-    totalGuesses = sap.Column(sap.Integer(), nullable=False, default=MatchConstant.DEFAUTL_TOTAL_GUESSES)
+    totalGuesses = sap.Column(sap.Integer(), nullable=False, default=MatchConfig.DEFAUTL_TOTAL_GUESSES)
     step = sap.Column(sap.String(LITTLE_STRING_SIZE), nullable=False, default=MatchConstant.INITIAL_STEP)
 
     user, userId = sap.getManyToOne(MATCH, USER, MODEL)

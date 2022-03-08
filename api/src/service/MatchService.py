@@ -2,6 +2,7 @@ from python_helper import log, ObjectHelper
 from python_framework import Service, ServiceMethod, SessionManager
 
 from constant import MatchConstant
+from config import MatchConfig
 from enumeration.MatchContext import MatchContext
 from enumeration.MatchStep import MatchStep
 import User, Match, Guess
@@ -23,10 +24,10 @@ class MatchService:
                 context = self.service.session.getContext(
                     user.id,
                     [MatchContext.USER],
-                    MatchConstant.DEFAULT_MATCH_TIME_IN_MINUTES
+                    MatchConfig.DEFAULT_MATCH_TIME_IN_MINUTES
                 ),
                 word = self.service.word.getRandomWord(),
-                totalGuesses = MatchConstant.DEFAUTL_TOTAL_GUESSES,
+                totalGuesses = MatchConfig.DEFAUTL_TOTAL_GUESSES,
                 step = MatchConstant.INITIAL_STEP
             )
         return self.fromModelToResponseDto(model)

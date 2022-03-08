@@ -34,14 +34,16 @@ word:
         api-key: ${RANDOM_WORD_API_KEY:default}
         rapid-host: ${RANDOM_WORD_RAPID_HOST:default}
         base-url: ${RANDOM_WORD_BASE_URL:defautl}
-        default-timeout-in-seconds: 5
+        default-timeout-in-seconds: 2
+        words-per-request: 2
     data:
         api-key: ${WORD_DATA_API_KEY:default}
         rapid-host: ${WORD_DATA_RAPID_HOST:default}
         base-url: ${WORD_DATA_BASE_URL:defautl}
-        default-timeout-in-seconds: 5
+        default-timeout-in-seconds: 2
 
 match:
+    word-lenght: 5
     duration-in-minutes: 4
     total-guesses: 5
 

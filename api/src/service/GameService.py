@@ -1,6 +1,7 @@
 from python_framework import Service, ServiceMethod
 
 from constant import MatchConstant
+from config import MatchConfig
 from enumeration.MatchContext import MatchContext
 from dto import WordGuessDto
 
@@ -10,7 +11,7 @@ class GameService:
 
     @ServiceMethod()
     def createContext(self):
-        return self.service.session.createContext([MatchContext.USER], MatchConstant.DEFAULT_MATCH_TIME_IN_MINUTES)
+        return self.service.session.createContext([MatchContext.USER], MatchConfig.DEFAULT_MATCH_TIME_IN_MINUTES)
 
 
     @ServiceMethod()

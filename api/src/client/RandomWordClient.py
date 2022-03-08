@@ -1,6 +1,6 @@
 from python_framework import HttpClient, HttpClientMethod
 
-from constant import RapitApiConstant
+from constant import RapidApiConstant
 from config import RandomWordConfig
 
 
@@ -8,8 +8,8 @@ from config import RandomWordConfig
     url = RandomWordConfig.BASE_URL,
     timeout = RandomWordConfig.DEFAULT_TIMEOUT_IN_SECONDS,
     headers = {
-        RapitApiConstant.RAPID_API_HOST_HEADER_KEY: RandomWordConfig.RAPID_HOST,
-        RapitApiConstant.RAPID_API_KEY_HEADER_KEY: RandomWordConfig.API_KEY
+        RapidApiConstant.RAPID_API_HOST_HEADER_KEY: RandomWordConfig.RAPID_HOST,
+        RapidApiConstant.RAPID_API_KEY_HEADER_KEY: RandomWordConfig.API_KEY
     }
 )
 class RandomWordClient :

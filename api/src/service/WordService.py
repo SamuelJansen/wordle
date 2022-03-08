@@ -1,6 +1,7 @@
 from python_helper import RandomHelper
 from python_framework import Service, ServiceMethod, HttpStatus, GlobalException
 
+from config import RandomWordConfig, MatchConfig
 import Word
 
 
@@ -31,7 +32,10 @@ class WordService:
 
     @ServiceMethod()
     def getRandomWord(self):
-        return RandomHelper.sample(self.createAll(self.getRandomWordTextList(20, 5))).text.upper()
+        return RandomHelper.sample(self.createAll(self.getRandomWordTextList(
+            RandomWordConfig.WORDS_PER_REQUEST,
+            MatchConfig.WORD_LENGHT
+        ))).text.upper()
 
 
     @ServiceMethod(requestClass=[[str]])
