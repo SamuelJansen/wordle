@@ -132,7 +132,6 @@ const getBodyPromisse = (response) => {
             // console.log('Not possible to get response body properly because of the following exception')
             console.log(error)
         })
-
 }
 
 const showInternalErrorMessage = (error) => {
@@ -227,7 +226,7 @@ const resetIfNeeded = () => {
                 });
                 keyboard.append(keyboardLine)
             })
-            return currentBody.guessStates.forEach((guess, guessIndex) => {
+            currentBody.guessStates.forEach((guess, guessIndex) => {
                 guess.guessStateRowList.forEach((guessLetter, guessLetterIndex) => {
                     guessDataRows[guess.id][guessLetter.id] = guessLetter.key
                     guessElementLetter = findGuessElementLetterByRowIndexAndLetterIndex(guess.id, guessLetter.id)
@@ -237,14 +236,7 @@ const resetIfNeeded = () => {
             });
             currentGuessRowIndex = initialState.length
             return flipAllGuessLetters(initialState)
-            // return initialState
         })
-        // .then((initialState) => {
-        //     sleep(SMALL_TIMEOUT)
-        //         .then(() => {
-        //
-        //         })
-        // })
 
 
 }
