@@ -225,7 +225,9 @@ const resetIfNeeded = () => {
         })
         .then((initialState) => {
             try {
-                sleep(2 * SMALL_TIMEOUT)
+                if (!initialState) {
+                    sleep(3 * SMALL_TIMEOUT)
+                }
                 console.log(initialState)
                 initialState.forEach((guess, guessIndex) => {
                     guess.guessStateRowList.forEach((guessLetter, guessLetterIndex) => {
@@ -238,6 +240,7 @@ const resetIfNeeded = () => {
                 currentGuessRowIndex = initialState.length
                 return flipAllGuessLetters(initialState)
             } catch (error) {
+                console.log('error')
                 return setTimeout(() => resetIfNeeded(), SMALL_TIMEOUT)
             }
         })
