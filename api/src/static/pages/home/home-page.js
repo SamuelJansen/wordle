@@ -128,7 +128,7 @@ const getBodyPromisse = (response) => {
             return enhancedResponse.body
         })
         .catch(error => {
-            console.log('Not possible to get response body properly because of the following exception')
+            // console.log('Not possible to get response body properly because of the following exception')
             console.log(error)
         })
 
@@ -262,7 +262,7 @@ const checkRow = () => {
                                 .then(() => resetIfNeeded())
 
                         } else {
-                            console.log(`currentGuessRowIndex: ${currentGuessRowIndex}, totalGuesses: ${totalGuesses}, body.step: ${body.step}`)
+                            // console.log(`currentGuessRowIndex: ${currentGuessRowIndex}, totalGuesses: ${totalGuesses}, body.step: ${body.step}`)
                             if (currentGuessRowIndex >= totalGuesses || body.step == 'LOSS') {
                                 gameIsOver = true
                                 showMessage('Game Over')
