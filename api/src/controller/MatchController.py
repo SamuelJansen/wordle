@@ -19,7 +19,7 @@ class MatchController:
 
 
     @ControllerMethod(url = '/match',
-        contextRequired = [MatchContext.USER],
+        # contextRequired = [MatchContext.USER],
         responseClass = [MatchDto.MatchResponseDto]
         # , logRequest = True
         , logResponse = True
