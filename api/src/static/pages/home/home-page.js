@@ -234,7 +234,7 @@ const resetIfNeeded = () => {
                 sleep(SMALL_TIMEOUT)
                     .then(() => {
                         console.log(initialState)
-                        currentBody.body.forEach((guess, guessIndex) => {
+                        currentBody.guessStates.forEach((guess, guessIndex) => {
                             guess.guessStateRowList.forEach((guessLetter, guessLetterIndex) => {
                                 guessDataRows[guess.id][guessLetter.id] = guessLetter.key
                                 guessElementLetter = findGuessElementLetterByRowIndexAndLetterIndex(guess.id, guessLetter.id)
