@@ -1,0 +1,7 @@
+DEFAUTL_IPV6 = '0:0:0:0:0:0:0:0'
+DEFAUTL_IPV4 = '0.0.0.0'
+DEFAUTL_USER_AGENT = 'default-user-agent'
+DEFAUTL_USER_AGENT_COMPLEMENT = 'default-user-agent-complement'
+DEFAUTL_PLATAFORM = 'default-plataform'
+DEFAUTL_DEVICE = 'default-device'
+DEFAUTL_COUNTRY = 'default-country'
