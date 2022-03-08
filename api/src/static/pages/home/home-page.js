@@ -142,12 +142,29 @@ const showInternalErrorMessage = (error) => {
     }
 }
 
-const updateContextHeader = () => {
-    return fetchWithTimeout(`${WORDLE_API_BASE_URL}/match/authenticate`,
+// const updateContextHeader = () => {
+//     return fetchWithTimeout(`${WORDLE_API_BASE_URL}/match/authenticate`,
+//         {
+//             method: 'POST',
+//             headers: DEFAULT_HEADERS,
+//             handler: updateContextHeader
+//         }
+//     )
+//         .then(response => getBodyPromisse(response))
+//         .then(body => {
+//             DEFAULT_HEADERS.delete(HEADER_SESSION_KEY)
+//             DEFAULT_HEADERS.append(HEADER_SESSION_KEY, `Bearer ${body.context}`)
+//             return body
+//         })
+//         .catch(error => showInternalErrorMessage(error))
+// }
+
+const getInitialState = () => {
+    return fetchWithTimeout(`${WORDLE_API_BASE_URL}/match`,
         {
             method: 'POST',
             headers: DEFAULT_HEADERS,
-            handler: updateContextHeader
+            handler: getInitialState
         }
     )
         .then(response => getBodyPromisse(response))
@@ -159,26 +176,13 @@ const updateContextHeader = () => {
         .catch(error => showInternalErrorMessage(error))
 }
 
-const getInitialState = () => {
-    return fetchWithTimeout(`${WORDLE_API_BASE_URL}/match`,
-        {
-            method: 'POST',
-            headers: DEFAULT_HEADERS,
-            handler: getInitialState
-        }
-    )
-        .then(response => getBodyPromisse(response))
-        .catch(error => showInternalErrorMessage(error))
-}
-
 const resetIfNeeded = () => {
     wordSize = 5
     totalGuesses = 5
     currentGuessRowIndex = 0
     currentGuessLetterIndex = 0
     gameIsOver = false
-    updateContextHeader()
-        .then((_) => getInitialState())
+    return getInitialState()
         .then((body) => {
             wordSize = body.wordSize
             totalGuesses = body.totalGuesses
@@ -225,7 +229,7 @@ const resetIfNeeded = () => {
         })
         .then((initialState) => {
             try {
-                sleep(3 * SMALL_TIMEOUT)
+                sleep(SMALL_TIMEOUT)
                     .then(() => {
                         console.log(initialState)
                         initialState.forEach((guess, guessIndex) => {
