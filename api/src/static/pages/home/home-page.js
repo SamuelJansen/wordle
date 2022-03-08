@@ -182,7 +182,7 @@ const resetIfNeeded = () => {
     currentGuessRowIndex = 0
     currentGuessLetterIndex = 0
     gameIsOver = false
-    const currentBody = null
+    let currentBody = null
     return getInitialState()
         .then((body) => {
             wordSize = body.wordSize
