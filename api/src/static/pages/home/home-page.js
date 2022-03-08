@@ -238,7 +238,7 @@ const resetIfNeeded = () => {
                 currentGuessRowIndex = initialState.length
                 return flipAllGuessLetters(initialState)
             } catch (error) {
-                console.log('error')
+                console.log(error)
                 return setTimeout(() => resetIfNeeded(), SMALL_TIMEOUT)
             }
         })
