@@ -182,10 +182,12 @@ const resetIfNeeded = () => {
     currentGuessRowIndex = 0
     currentGuessLetterIndex = 0
     gameIsOver = false
+    const currentBody = null
     return getInitialState()
         .then((body) => {
             wordSize = body.wordSize
             totalGuesses = body.totalGuesses
+            currentBody = body
             return body
         })
         .then((body) => body.guessStates)
@@ -232,8 +234,8 @@ const resetIfNeeded = () => {
                 sleep(SMALL_TIMEOUT)
                     .then(() => {
                         console.log(initialState)
-                        initialState.forEach((guess, guessIndex) => {
-                            guess.guessStateRowList.forEach((guessLetter, guessLetterIndex) => {
+                        currentBody.guessStates.forEach((guess, guessIndex) => {
+                            currentBody.getss.guessStateRowList.forEach((guessLetter, guessLetterIndex) => {
                                 guessDataRows[guess.id][guessLetter.id] = guessLetter.key
                                 guessElementLetter = findGuessElementLetterByRowIndexAndLetterIndex(guess.id, guessLetter.id)
                                 guessElementLetter.textContent = guessLetter.key
