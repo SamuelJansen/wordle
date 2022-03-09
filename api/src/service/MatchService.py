@@ -38,7 +38,7 @@ class MatchService:
 
     @ServiceMethod(requestClass=[User.User, str])
     def updateGuess(self, user, wordGuess):
-        model = self.findCurrentMatchByUserId(user.id)
+        model = self.findOrCreateModelByUserModel(user)
         self.validator.match.validateWordGuess(wordGuess, model)
         guess = self.service.guess.createModel(wordGuess, model)
         if guess not in model.guessList:
