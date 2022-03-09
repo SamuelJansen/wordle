@@ -16,7 +16,7 @@ const DEFAULT_HEADERS = new Headers({
 });
 
 const ENTER_KEY = 'ENTER'
-const DELETE_KEY = '«'
+const DELETE_KEY = 'DEL' // '«'
 const keyboardLineData = [
     [
         {'key': 'Q', 'relatedKeys': []},
@@ -42,7 +42,7 @@ const keyboardLineData = [
         {'key': 'L', 'relatedKeys': []}
     ],
     [
-        {'key': ENTER_KEY, 'relatedKeys': []},
+        {'key': DELETE_KEY, 'relatedKeys': []},
         {'key': 'Z', 'relatedKeys': []},
         {'key': 'X', 'relatedKeys': []},
         {'key': 'C', 'relatedKeys': []},
@@ -50,9 +50,10 @@ const keyboardLineData = [
         {'key': 'B', 'relatedKeys': []},
         {'key': 'N', 'relatedKeys': []},
         {'key': 'M', 'relatedKeys': []},
-        {'key': DELETE_KEY, 'relatedKeys': []}
+        {'key': ENTER_KEY, 'relatedKeys': []}
     ]
 ]
+let firstPageLoad = true
 let guessDataRows = null
 let wordSize = null
 let totalGuesses = null
@@ -102,7 +103,8 @@ const addKeyboardScreen = () => {
             const buttonElement = document.createElement('button')
             buttonElement.textContent = keyData.key
             buttonElement.setAttribute('id', keyData.key)
-            buttonElement.addEventListener('click', () => handleClick(keyData.key))
+            buttonElement.setAttribute('class', 'keyboard-key')
+            buttonElement.addEventListener('click', () => handleClick(buttonElement, keyData.key))
             keyboardLine.append(buttonElement)
         });
         keyboard.append(keyboardLine)
@@ -164,7 +166,7 @@ const updateContextHeader = () => {
 const handleUnauthorisedSession = (response) => {
     if (401 === response.status) {
         console.log('Unauthorized session. Restarting match')
-        reStartGame()
+        restartMatch()
         throw Error('Match restarted')
     }
 }
@@ -178,19 +180,37 @@ const getCurrentState = () => {
         }
     )
         .then(response => getResponseBody(response))
-        .catch(error => showInternalErrorMessage(error))
+        .then((matchData) => {
+            if (firstPageLoad && 0 < matchData.guessStates.length) {
+                showMessage('welcomeback')
+                firstPageLoad = false
+            }
+            return matchData
+        })
+        .catch(error => {
+            showInternalErrorMessage(error)
+            throw Error('Not possible to get matchData')
+        })
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////// game-logic //////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
 const recoverGameState = () => {
+    let currentMatchData = null
     return getCurrentState()
-        .then((currentMatchData) => {
+        .then((matchDataResponse) => {
+            currentMatchData = matchDataResponse
             wordSize = currentMatchData.wordSize
             totalGuesses = currentMatchData.totalGuesses
             return currentMatchData.guessStates
         })
         .then((currentState) => {
             if (currentGuessRowIndex > currentState.length) {
-                return currentState
+                throw new Error('Delayed response...')
             }
             currentState.forEach((guess, guessIndex) => {
                 guess.guessStateRowList.forEach((guessLetter, guessLetterIndex) => {
@@ -205,12 +225,6 @@ const recoverGameState = () => {
             return currentState
         })
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////
-////////// game-logic //////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////
 
 const checkRow = () => {
     const wordGuess = guessDataRows[currentGuessRowIndex].join('')
@@ -229,13 +243,13 @@ const checkRow = () => {
                         if (currentMatchData.step === 'VICTORY') {
                             gameIsOver = true
                             showMessage('perfect!')
-                                .then(() => reStartGame())
+                                .then(() => restartMatch())
                         } else {
                             // console.log(`currentGuessRowIndex: ${currentGuessRowIndex}, totalGuesses: ${totalGuesses}, currentMatchData.step: ${currentMatchData.step}`)
                             if (currentGuessRowIndex >= totalGuesses || 'LOSS' === currentMatchData.step) {
                                 gameIsOver = true
                                 showMessage(`aawww... the word was "${currentMatchData.correctWord}"`)
-                                    .then(() => reStartGame())
+                                    .then(() => restartMatch())
                             }
                             if (currentGuessRowIndex <= totalGuesses) {
                                 currentGuessRowIndex++
@@ -284,17 +298,37 @@ const showMessage = (message) => {
     }
 }
 
-const handleClick = (clickedLetter) => {
+const handleClickAnimation = (keyboardKey, clickedLetter) => {
+    keyboardKey.classList.add('clicked')
+    if (ENTER_KEY === clickedLetter || DELETE_KEY === clickedLetter) {
+        let originalFontSize = keyboardKey.style.fontSize
+        keyboardKey.style.fontSize = '8px'
+        sleep(80)
+            .then(() => {
+                keyboardKey.style.fontSize = originalFontSize
+            })
+            sleep(220)
+            .then(() => {
+                keyboardKey.classList.remove('clicked')
+            })
+    } else {
+        sleep(300)
+            .then(() => keyboardKey.classList.remove('clicked'))
+    }
+}
+
+const handleClick = (keyboardKey, clickedLetter) => {
+    handleClickAnimation(keyboardKey, clickedLetter)
     if (!gameIsOver) {
         if (DELETE_KEY === clickedLetter) {
             deleteLetter()
-            return
         }
-        if (ENTER_KEY === clickedLetter) {
+        else if (ENTER_KEY === clickedLetter) {
             checkRow()
-            return
         }
-        addLetter(clickedLetter)
+        else {
+            addLetter(clickedLetter)
+        }
     }
 }
 
@@ -396,12 +430,9 @@ const getResponseBody = (response) => {
         .then(enhancedResponse => {
             if (400 <= enhancedResponse.status) {
                 showUxErrorMessage(enhancedResponse)
+                throw new Error(`Server error: ${enhancedResponse.body.message}`)
             }
             return enhancedResponse.body
-        })
-        .catch(error => {
-            // console.log('Not possible to get response body properly because of the following exception')
-            console.log(error)
         })
 }
 
@@ -432,7 +463,7 @@ const addColorToKey = (keyLetter, color) => {
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-const reStartGame = () => {
+const setInitialState = () => {
     guessDataRows = [
         ['', '', '', '', ''],
         ['', '', '', '', ''],
@@ -446,15 +477,22 @@ const reStartGame = () => {
     currentGuessRowIndex = 0
     currentGuessLetterIndex = 0
     gameIsOver = false
-    showMessage('new match')
+}
+
+const resetBoard = () => {
+    setInitialState()
     resetGameScreen()
     updateContextHeader()
         .then(() => recoverGameState())
 }
 
-const startGame = () => {
-    buildGameScreen()
-    updateContextHeader()
+const restartMatch = () => {
+    showMessage('new match')
+    resetBoard()
 }
 
-reStartGame()
+const startMatch = () => {
+    resetBoard()
+}
+
+startMatch()

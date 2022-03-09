@@ -10,7 +10,7 @@ class MatchValidator:
     def validateWordGuess(self, wordGuess, model):
         if wordGuess in [guess.word for guess in model.guessList]:
             raise GlobalException(
-                message = f'Word already checked',
-                logMessage = responseAsDictionary.get('result_msg'),
+                message = f'Try another word',
+                logMessage = f'The word {wordGuess} was already checked',
                 status = HttpStatus.BAD_REQUEST
             )

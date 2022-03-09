@@ -29,7 +29,7 @@ class MatchMapper:
     def fromModelToResponseDto(self, model, correctWord, dto):
         self.mapper.guess.overrideGuessStatesResponseDto(model, dto)
         dto.wordSize = len(model.word)
-        det.correctWord = correctWord
+        dto.correctWord = correctWord
         return dto
 
     @MapperMethod(requestClass=[Match.Match])

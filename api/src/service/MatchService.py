@@ -15,7 +15,7 @@ class MatchService:
     def abandon(self):
         model = self.findCurrentMatchByUserId(self.service.session.getContextId())
         self.mapper.match.overrideStepToAbandoned(model)
-        return self.mapper.match.fromModelToResponseDto(self.persist(model))
+        return self.mapAndReturn(model, MatchConstant.DEFAULT_CORRECT_WORD)
 
 
     @ServiceMethod(requestClass=[User.User])
@@ -33,7 +33,7 @@ class MatchService:
                 totalGuesses = MatchConfig.DEFAUTL_TOTAL_GUESSES,
                 step = MatchConstant.INITIAL_STEP
             )
-        return self.mapper.match.fromModelToResponseDto(self.persist(model))
+        return self.mapAndReturn(model, MatchConstant.DEFAULT_CORRECT_WORD)
 
 
     @ServiceMethod(requestClass=[User.User, str])
@@ -47,12 +47,11 @@ class MatchService:
         if model.step not in MatchConstant.END_MATCH_STEP_LIST:
             model.step = MatchStep.GUESSING
             correctWord = model.word
-        else:
-            if model.word == wordGuess:
-                model.step = MatchStep.VICTORY
-            if len(model.guessList) > model.totalGuesses and model.step not in MatchConstant.END_MATCH_STEP_LIST:
-                model.step = MatchStep.LOSS
-        return self.mapper.match.fromModelToResponseDto(self.persist(model), correctWord)
+        if model.word == wordGuess:
+            model.step = MatchStep.VICTORY
+        if len(model.guessList) > model.totalGuesses and model.step not in MatchConstant.END_MATCH_STEP_LIST:
+            model.step = MatchStep.LOSS
+        return self.mapAndReturn(model, correctWord)
 
 
     @ServiceMethod(requestClass=[int])
@@ -73,3 +72,8 @@ class MatchService:
     @ServiceMethod(requestClass=[Match.Match])
     def persist(self, model):
         return self.repository.match.save(model)
+
+
+    @ServiceMethod(requestClass=[Match.Match, str])
+    def mapAndReturn(self, model, correctWord):
+        return self.mapper.match.fromModelToResponseDto(self.persist(model), correctWord)

@@ -4,7 +4,7 @@
     font-size: 14px;
     border: 0px;
     margin: 0px;
-    transition: .1s
+    transition: .08s;
 }
 
 body {
@@ -95,10 +95,6 @@ body {
     margin: 2px;
 }
 
-.guess-letter.flip {
-    animation: 0.3s linear flipping;
-}
-
 .keyboard-container {
     width: 100%;
     height: 100%;
@@ -129,7 +125,10 @@ body {
     margin-right: 4px;
 }
 
-#ENTER, #« {
+/* #ENTER, #« {
+    width: 13%;
+} */
+#ENTER, #DEL {
     width: 13%;
 }
 
@@ -142,7 +141,7 @@ body {
 
 @media only screen and (max-width: 600px) {
     * {
-        font-size: 10px;
+        font-size: 14px;
     }
     .guess-container .guess-letter {
         width: 42px;
@@ -154,9 +153,16 @@ body {
     .keyboard-line-container button {
         width: 7%;
     }
-    #ENTER, #« {
+    /* #ENTER, #« {
+        width: 12%;
+    } */
+    #ENTER, #DEL {
         width: 12%;
     }
+}
+
+.guess-letter.flip {
+    animation: 0.3s linear flipping;
 }
 
 @keyframes flipping {
@@ -174,6 +180,45 @@ body {
     }
     100% {
         transform: rotateX(0deg);
+    }
+}
+
+.message-container p {
+    animation: 0.2s linear show-up;
+}
+
+@keyframes show-up {
+    0% {
+        opacity: .0;
+    }
+    30% {
+        opacity: .9;
+    }
+    70% {
+        transform: .95;
+    }
+    100% {
+        transform: 1;
+    }
+}
+
+
+.keyboard-line-container .clicked {
+    animation: .2s linear typing;
+}
+
+@keyframes typing {
+    0% {
+        font-size: 18px;
+    }
+    9% {
+        font-size: 17px;
+    }
+    23% {
+        font-size: 15px;
+    }
+    80% {
+        font-size: 15px;
     }
 }
 
