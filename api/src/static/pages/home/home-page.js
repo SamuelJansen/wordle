@@ -276,7 +276,7 @@ const showUxErrorMessage = (enhancedResponse) => {
         return showMessage(enhancedResponse.body.message)
     }
     showMessage(DEFAULT_UX_ERROR_MESSAGE)
-    return resetBoardDataAndRecoverGameState()
+    return resetBoard()
 }
 
 const showInternalErrorMessage = (error) => {
