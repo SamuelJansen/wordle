@@ -231,7 +231,7 @@ const checkRow = () => {
     let currentState = null
     if (currentGuessLetterIndex >= wordSize) {
         return fetch(`${WORDLE_API_BASE_URL}/match/verify?word=${wordGuess}`, {
-            method: 'GET',
+            method: 'PATCH',
             headers: DEFAULT_HEADERS
         })
             .then((response) => getResponseBody(response))

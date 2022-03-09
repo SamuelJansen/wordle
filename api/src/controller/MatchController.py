@@ -14,7 +14,7 @@ class MatchController:
         # , logRequest = True
         # , logResponse = True
     )
-    def get(self, params=None):
+    def patch(self, params=None):
         return self.service.game.updateGuess(params), HttpStatus.OK
 
 
