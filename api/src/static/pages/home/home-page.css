@@ -125,10 +125,10 @@ body {
     margin-right: 4px;
 }
 
-/* #ENTER, #« {
+/* #SEND, #« {
     width: 13%;
 } */
-#ENTER, #DEL {
+#SEND, #DEL {
     width: 13%;
 }
 
@@ -141,7 +141,7 @@ body {
 
 @media only screen and (max-width: 600px) {
     * {
-        font-size: 14px;
+        font-size: 12px;
     }
     .guess-container .guess-letter {
         width: 42px;
@@ -153,10 +153,10 @@ body {
     .keyboard-line-container button {
         width: 7%;
     }
-    /* #ENTER, #« {
+    /* #SEND, #« {
         width: 12%;
     } */
-    #ENTER, #DEL {
+    #SEND, #DEL {
         width: 12%;
     }
 }

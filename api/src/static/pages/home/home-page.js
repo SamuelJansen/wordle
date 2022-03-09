@@ -15,7 +15,7 @@ const DEFAULT_HEADERS = new Headers({
     'Access-Control-Allow-Origin': '*'
 });
 
-const ENTER_KEY = 'ENTER'
+const ENTER_KEY = 'SEND'
 const DELETE_KEY = 'DEL' // '«'
 const keyboardLineData = [
     [
