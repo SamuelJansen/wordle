@@ -17,7 +17,7 @@ class GameService:
     @ServiceMethod()
     def findOrCreateMatch(self):
         user = self.service.user.findOrCreateModel()
-        return self.service.match.findOrCreateModelByUserModel(user)
+        return self.service.match.findOrCreateByUserModel(user)
 
 
     @ServiceMethod(requestClass=[WordGuessDto.WordGuessRequestParamDto])
