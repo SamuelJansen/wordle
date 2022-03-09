@@ -209,10 +209,11 @@ const recoverGameState = () => {
             return currentMatchData.guessStates
         })
         .then((currentState) => {
-            if (currentGuessRowIndex > currentState.length) {
+            if (0 < currentState.length && currentGuessRowIndex >= currentState.length) {
                 resetBoardDataAndRecoverGameState()
                 throw new Error('Delayed response...')
             }
+            currentGuessRowIndex = currentState.length
             currentState.forEach((guess, guessIndex) => {
                 guess.guessStateRowList.forEach((guessLetter, guessLetterIndex) => {
                     guessDataRows[guess.id][guessLetter.id] = guessLetter.key
@@ -221,7 +222,6 @@ const recoverGameState = () => {
                     guessElementLetter.setAttribute('typed-letter', guessLetter.key)
                 });
             });
-            currentGuessRowIndex = currentState.length
             flipAllGuessLetters(currentState)
             return currentState
         })
@@ -303,6 +303,11 @@ const showMessage = (message) => {
 const handleClickAnimation = (keyboardKey, clickedLetter) => {
     keyboardKey.classList.add('clicked')
     if (ENTER_KEY === clickedLetter || DELETE_KEY === clickedLetter) {
+        if (ENTER_KEY == clickedLetter) {
+            keyboardKey.disabled = true;
+            sleep(1500)
+                .then(() => keyboardKey.disabled = False)
+        }
         let originalFontSize = keyboardKey.style.fontSize
         keyboardKey.style.fontSize = '8px'
         sleep(80)

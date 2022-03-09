@@ -45,7 +45,7 @@ class WordService:
 
     @ServiceMethod(requestClass=[[str]])
     def createOrUpdateAll(self, wordTextList):
-        lowerWordTextList = [w.lower() for w in wordTextList]
+        lowerWordTextList = [w.lower() for w in set(wordTextList)]
         exixtingModelList = self.repository.word.findAllByTextIn(lowerWordTextList)
         return self.repository.word.saveAll([
             * exixtingModelList,
