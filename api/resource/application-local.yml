@@ -8,6 +8,9 @@ api:
         settings:
             check_same_thread: False
 
+match:
+    duration-in-minutes: 30
+    
 swagger:
     schemes: [${api.server.scheme}] ###- bug
     host: ${SWAGGER_HOST:${api.server.host}}:${api.server.port} ###- bug

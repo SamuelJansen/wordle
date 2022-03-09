@@ -44,7 +44,7 @@ word:
 
 match:
     word-lenght: 5
-    duration-in-minutes: 1
+    duration-in-minutes: 30
     total-guesses: 5
 
 swagger:
