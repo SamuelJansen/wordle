@@ -33,6 +33,7 @@ class MatchRepository:
         modelList = self.repository.session.query(self.model).filter(self.model.id.in_(idList)).all()
         self.repository.session.commit()
         return modelList
+        
 
     def findMostRecentByUserIdAndStepIn(self, userId, stepList):
         if ObjectHelper.isNone(userId) or ObjectHelper.isEmpty(stepList):
