@@ -41,7 +41,7 @@ class MatchService:
         model = self.findOrCreateModelByUserModel(user)
         self.validator.match.validateWordGuess(wordGuess, model)
         guess = self.service.guess.createModel(wordGuess, model)
-        if guess.word not in [g.rowr for g in model.guessList]:
+        if guess.word not in [g.row for g in model.guessList]:
             model.guessList.append(guess)
         correctWord = MatchConstant.DEFAULT_CORRECT_WORD
         if model.step not in MatchConstant.END_MATCH_STEP_LIST:
