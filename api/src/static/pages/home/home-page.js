@@ -210,6 +210,7 @@ const recoverGameState = () => {
         })
         .then((currentState) => {
             if (currentGuessRowIndex > currentState.length) {
+                resetBoardDataAndRecoverGameState()
                 throw new Error('Delayed response...')
             }
             currentState.forEach((guess, guessIndex) => {
@@ -274,7 +275,8 @@ const showUxErrorMessage = (enhancedResponse) => {
     if (500 > enhancedResponse.status) {
         return showMessage(enhancedResponse.body.message)
     }
-    return showMessage(DEFAULT_UX_ERROR_MESSAGE)
+    showMessage(DEFAULT_UX_ERROR_MESSAGE)
+    return resetBoardDataAndRecoverGameState()
 }
 
 const showInternalErrorMessage = (error) => {
@@ -479,20 +481,28 @@ const setInitialState = () => {
     gameIsOver = false
 }
 
-const resetBoard = () => {
+const resetBoardDataAndRecoverGameState = () => {
+    return recoverGameState()
+}
+
+const resetBoardData = () => {
     setInitialState()
     resetGameScreen()
-    updateContextHeader()
+}
+
+const resetBoard = () => {
+    resetBoardData()
+    return updateContextHeader()
         .then(() => recoverGameState())
 }
 
 const restartMatch = () => {
     showMessage('new match')
-    resetBoard()
+    return resetBoard()
 }
 
 const startMatch = () => {
-    resetBoard()
+    return resetBoard()
 }
 
 startMatch()
