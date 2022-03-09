@@ -1,22 +1,23 @@
 from python_framework import Service, ServiceMethod
 
-import User, Guess, Match
-from enumeration.GuessStatus import GuessStatus
+import Guess, Match
 
 
 @Service()
 class GuessService:
 
-    @ServiceMethod(requestClass=[str, User.User, Match.Match])
-    def createInvalidModel(self, wordGuess, user, match):
-        return self.persist(Guess.Guess(word=wordGuess, status=GuessStatus.INVALID, user=user, match=match))
+    @ServiceMethod(requestClass=[str, Match.Match])
+    def createModel(self, wordGuess, match):
+        try:
+            self.service.word.createOrUpdateByText(wordGuess)
+            self.service.guessEvent.createValidGuess(wordGuess, userId=match.user.id, matchId=match.id)
+        except Exception as exception:
+            self.service.guessEvent.createInvalidGuess(wordGuess, userId=match.user.id, matchId=match.id)
+            raise exception
+        self.service.word.createOrUpdateByText(wordGuess)
+        return self.persist(Guess.Guess(word=wordGuess, user=match.user, match=match))
 
 
-    @ServiceMethod(requestClass=[Guess.Guess])
-    def overrideToValidModel(model):
-        model.status = GuessStatus.VALID
-
-
-    @ServiceMethod(requestClass=[Guess.Guess])
+    @ServiceMethod(requestClass=[Match.Match])
     def persist(self, model):
         return self.repository.guess.save(model)

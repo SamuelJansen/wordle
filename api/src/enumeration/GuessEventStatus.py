@@ -2,10 +2,10 @@ from python_framework import Enum, EnumItem
 
 
 @Enum()
-class GuessStatusEnumeration :
+class GuessEventStatusEnumeration :
     VALID = EnumItem()
     INVALID = EnumItem()
     UNKNOWN = EnumItem()
 
 
-GuessStatus = GuessStatusEnumeration()
+GuessEventStatus = GuessEventStatusEnumeration()

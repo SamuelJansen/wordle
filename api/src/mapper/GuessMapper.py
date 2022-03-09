@@ -4,7 +4,6 @@ from python_framework import Mapper, MapperMethod
 import Guess, Match
 from dto import GuessDto, GuessStateDto, MatchDto
 from enumeration.GuessState import GuessState
-from enumeration.GuessStatus import GuessStatus
 
 
 @Mapper()
@@ -42,13 +41,8 @@ class GuessMapper:
                         state = self.getLetterState(letter, match.word, letterIndex, isUnseen=guessRow.id<len(match.guessList))
                     ) for letterIndex, letter in enumerate(guessRow.word)
                 ]
-            ) for guessRowIndex, guessRow in enumerate(self.helper.guess.getSortedValidGuessList(match.guessList))
+            ) for guessRowIndex, guessRow in enumerate(self.helper.guess.getSortedGuessList(match.guessList))
         ]
-
-
-    @MapperMethod(requestClass=[Guess.Guess])
-    def overrideStatusToValidStatus(self, model):
-        model.status = GuessStatus.VALID
 
 
     @MapperMethod(requestClass=[str, str, int])

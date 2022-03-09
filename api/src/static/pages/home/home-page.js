@@ -8,10 +8,10 @@ const SMALL_TIMEOUT = DEFAULT_REQUEST_TIMEOUT / 5
 const DEFAULT_ANIMATION_TIMEOUT = 200
 const DEFAULT_MESSAGE_TIME_DURATIONT = 5000
 const HEADER_SESSION_KEY = 'Context'
-const DEFAULT_UX_ERROR_MESSAGE = 'An error occurred. Try again later'
+const DEFAULT_UX_ERROR_MESSAGE = 'wops! server just stumbeld'
 const DEFAULT_HEADERS = new Headers({
-    'Accept': 'application/body',
-    'Content-Type': 'application/body',
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*'
 });
 
@@ -53,180 +53,146 @@ const keyboardLineData = [
         {'key': DELETE_KEY, 'relatedKeys': []}
     ]
 ]
-const guessDataRows = [
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', '']
-]
+let guessDataRows = null
 let wordSize = null
 let totalGuesses = null
 let currentGuessRowIndex = null
 let currentGuessLetterIndex = null
 let gameIsOver = null
 
-let wordle = 'ABCDE'
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////// screen-flow /////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
 
-const toggleFullScreen = () => {
-  if (!document.fullscreenElement &&    // alternative standard method
-      !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
-    if (document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen();
-    } else if (document.documentElement.msRequestFullscreen) {
-      document.documentElement.msRequestFullscreen();
-    } else if (document.documentElement.mozRequestFullScreen) {
-      document.documentElement.mozRequestFullScreen();
-    } else if (document.documentElement.webkitRequestFullscreen) {
-      document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-    }
-  } else {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if (document.msExitFullscreen) {
-      document.msExitFullscreen();
-    } else if (document.mozCancelFullScreen) {
-      document.mozCancelFullScreen();
-    } else if (document.webkitExitFullscreen) {
-      document.webkitExitFullscreen();
-    }
-  }
-}
-
-const fetchWithTimeout = (url, options={}) => {
-    const { timeout = DEFAULT_REQUEST_TIMEOUT } = options
-    const { handler = null } = options
-    return Promise.race([
-        fetch(url, options),
-        new Promise((_, reject) =>
-            setTimeout(() => reject(new Error('Request timeout')), timeout)
-        )
-    ])
-        // .catch(error => handler())
-}
-
-const showUxErrorMessage = (enhancedResponse) => {
-    if (500 > enhancedResponse.status) {
-        return showMessage(enhancedResponse.body.message)
-    }
-    return showMessage(DEFAULT_UX_ERROR_MESSAGE)
-}
-
-const getBodyPromisse = (response) => {
-    return ((r) => r.json())(response)
-        .then(body => {
-            return {
-                response: response,
-                status: response.status,
-                body: body
-            }
+const addGuessesScreen = () => {
+    guessDataRows.forEach((guessRowContent, guessRowIndex) => {
+        const guessRow = document.createElement('div')
+        guessRow.setAttribute('id', 'guess-row-' + guessRowIndex)
+        guessRowContent.forEach((guess, guessIndex) => {
+            const guessLetter = document.createElement('div')
+            guessLetter.setAttribute('id', 'guess-row-' + guessRowIndex + '-guess-letter-' + guessIndex)
+            guessLetter.classList.add('guess-letter')
+            guessRow.append(guessLetter)
         })
-        .then(enhancedResponse => {
-            if (400 <= enhancedResponse.status) {
-                showUxErrorMessage(enhancedResponse)
-            }
-            return enhancedResponse.body
-        })
-        .catch(error => {
-            // console.log('Not possible to get response body properly because of the following exception')
-            console.log(error)
-        })
+        guessDisplay.append(guessRow)
+    })
 }
 
-const showInternalErrorMessage = (error) => {
-    console.log(error)
-    if (!error.message) {
-        console.log(`No message present. error.message: ${error.message}`)
-    }
+const removeGuessesScreen = () => {
+    return guessDataRows.forEach((guessRowContent, guessRowIndex) => {
+        oldGuessRow = document.querySelector('#guess-row-' + guessRowIndex)
+        if (oldGuessRow) {
+            oldGuessRow.remove()
+        }
+    })
 }
 
-// const updateContextHeader = () => {
-//     return fetchWithTimeout(`${WORDLE_API_BASE_URL}/match/authenticate`,
-//         {
-//             method: 'POST',
-//             headers: DEFAULT_HEADERS,
-//             handler: updateContextHeader
-//         }
-//     )
-//         .then(response => getBodyPromisse(response))
-//         .then(body => {
-//             DEFAULT_HEADERS.delete(HEADER_SESSION_KEY)
-//             DEFAULT_HEADERS.append(HEADER_SESSION_KEY, `Bearer ${body.context}`)
-//             return body
-//         })
-//         .catch(error => showInternalErrorMessage(error))
-// }
+const resetGuessesScreen = () => {
+    removeGuessesScreen()
+    addGuessesScreen()
+}
 
-const getInitialState = () => {
-    return fetchWithTimeout(`${WORDLE_API_BASE_URL}/match`,
+const addKeyboardScreen = () => {
+    return keyboardLineData.forEach((keyDataLine, keyDataLineIndex) => {
+        const keyboardLine = document.createElement('div')
+        keyboardLine.classList.add('keyboard-line-container')
+        keyDataLine.forEach((keyData, keyDataIndex) => {
+            const buttonElement = document.createElement('button')
+            buttonElement.textContent = keyData.key
+            buttonElement.setAttribute('id', keyData.key)
+            buttonElement.addEventListener('click', () => handleClick(keyData.key))
+            keyboardLine.append(buttonElement)
+        });
+        keyboard.append(keyboardLine)
+    })
+}
+
+const removeKeyboardScreen = () => {
+    return keyboardLineData.forEach((item, i) => {
+        oldKeyboardLine = document.querySelector('.keyboard-line-container')
+        if (oldKeyboardLine) {
+            oldKeyboardLine.remove()
+        }
+    });
+}
+
+const resetKeyboardScreen = () => {
+    removeKeyboardScreen()
+    addKeyboardScreen()
+}
+
+const buildGameScreen = () => {
+    addGuessesScreen()
+    addKeyboardScreen()
+}
+
+const removeGameScreen = () => {
+    removeGuessesScreen()
+    removeKeyboardScreen()
+}
+
+const resetGameScreen = () => {
+    resetGuessesScreen()
+    resetKeyboardScreen()
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////// game-state //////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+const updateContextHeader = () => {
+    return fetchWithTimeout(`${WORDLE_API_BASE_URL}/match/authenticate`,
         {
             method: 'POST',
             headers: DEFAULT_HEADERS,
-            handler: getInitialState
+            handler: updateContextHeader
         }
     )
-        .then(response => getBodyPromisse(response))
-        .then(body => {
+        .then(response => getResponseBody(response))
+        .then(contextResponse => {
             DEFAULT_HEADERS.delete(HEADER_SESSION_KEY)
-            DEFAULT_HEADERS.append(HEADER_SESSION_KEY, `Bearer ${body.context}`)
-            return body
+            DEFAULT_HEADERS.append(HEADER_SESSION_KEY, `Bearer ${contextResponse.context}`)
+            return contextResponse
         })
         .catch(error => showInternalErrorMessage(error))
 }
 
-const resetIfNeeded = () => {
-    wordSize = 5
-    totalGuesses = 5
-    currentGuessRowIndex = 0
-    currentGuessLetterIndex = 0
-    gameIsOver = false
-    let currentBody = null
-    return getInitialState()
-        .then((body) => {
-            wordSize = body.wordSize
-            totalGuesses = body.totalGuesses
-            currentBody = body
-            return body
+const handleUnauthorisedSession = (response) => {
+    if (401 === response.status) {
+        console.log('Unauthorized session. Restarting match')
+        reStartGame()
+        throw Error('Match restarted')
+    }
+}
+
+const getCurrentState = () => {
+    return fetchWithTimeout(`${WORDLE_API_BASE_URL}/match`,
+        {
+            method: 'POST',
+            headers: DEFAULT_HEADERS,
+            handler: getCurrentState
+        }
+    )
+        .then(response => getResponseBody(response))
+        .catch(error => showInternalErrorMessage(error))
+}
+
+const recoverGameState = () => {
+    return getCurrentState()
+        .then((currentMatchData) => {
+            wordSize = currentMatchData.wordSize
+            totalGuesses = currentMatchData.totalGuesses
+            return currentMatchData.guessStates
         })
-        .then((body) => body.guessStates)
-        .then((initialState) => {
-            guessDataRows.forEach((guessRowContent, guessRowIndex) => {
-                oldGuessRow = document.querySelector('#guess-row-' + guessRowIndex)
-                if (oldGuessRow) {
-                    oldGuessRow.remove()
-                }
-            })
-            keyboardLineData.forEach((item, i) => {
-                oldKeyboardLine = document.querySelector('.keyboard-line-container')
-                if (oldKeyboardLine) {
-                    oldKeyboardLine.remove()
-                }
-            });
-            guessDataRows.forEach((guessRowContent, guessRowIndex) => {
-                const guessRow = document.createElement('div')
-                guessRow.setAttribute('id', 'guess-row-' + guessRowIndex)
-                guessRowContent.forEach((guess, guessIndex) => {
-                    const guessLetter = document.createElement('div')
-                    guessLetter.setAttribute('id', 'guess-row-' + guessRowIndex + '-guess-letter-' + guessIndex)
-                    guessLetter.classList.add('guess-letter')
-                    guessRow.append(guessLetter)
-                })
-                guessDisplay.append(guessRow)
-            })
-            keyboardLineData.forEach((keyDataLine, keyDataLineIndex) => {
-                const keyboardLine = document.createElement('div')
-                keyboardLine.classList.add('keyboard-line-container')
-                keyDataLine.forEach((keyData, keyDataIndex) => {
-                    const buttonElement = document.createElement('button')
-                    buttonElement.textContent = keyData.key
-                    buttonElement.setAttribute('id', keyData.key)
-                    buttonElement.addEventListener('click', () => handleClick(keyData.key))
-                    keyboardLine.append(buttonElement)
-                });
-                keyboard.append(keyboardLine)
-            })
-            currentBody.guessStates.forEach((guess, guessIndex) => {
+        .then((currentState) => {
+            if (currentGuessRowIndex > currentState.length) {
+                return currentState
+            }
+            currentState.forEach((guess, guessIndex) => {
                 guess.guessStateRowList.forEach((guessLetter, guessLetterIndex) => {
                     guessDataRows[guess.id][guessLetter.id] = guessLetter.key
                     guessElementLetter = findGuessElementLetterByRowIndexAndLetterIndex(guess.id, guessLetter.id)
@@ -234,49 +200,42 @@ const resetIfNeeded = () => {
                     guessElementLetter.setAttribute('typed-letter', guessLetter.key)
                 });
             });
-            currentGuessRowIndex = initialState.length
-            return flipAllGuessLetters(initialState)
+            currentGuessRowIndex = currentState.length
+            flipAllGuessLetters(currentState)
+            return currentState
         })
-
-
 }
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////// game-logic //////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
 
 const checkRow = () => {
     const wordGuess = guessDataRows[currentGuessRowIndex].join('')
-    let currentResponse = null
+    let currentState = null
     if (currentGuessLetterIndex >= wordSize) {
         return fetch(`${WORDLE_API_BASE_URL}/match/verify?word=${wordGuess}`, {
             method: 'GET',
             headers: DEFAULT_HEADERS
         })
-            .then((response) => {
-                currentResponse = response
-                return getBodyPromisse(response)
-            })
-            .then(body => {
-                if (400 <= currentResponse.status) {
-                    if (400 < currentResponse.status){
-                        resetIfNeeded()
-                    }
-                    return
-                }
-                body.guessStates.forEach((guess, guessIndex) => {
-                    if (currentGuessRowIndex == guess.id) {
+            .then((response) => getResponseBody(response))
+            .then(currentMatchData => {
+                currentState = currentMatchData.guessStates
+                currentState.forEach((guess, guessIndex) => {
+                    if (currentGuessRowIndex === guess.id) {
                         flipGuessLetters(guess.guessStateRowList, guess.id)
-                        if (body.step == 'VICTORY') {
+                        if (currentMatchData.step === 'VICTORY') {
                             gameIsOver = true
-                            showMessage('Perfect!')
-                                .then(() => resetIfNeeded())
+                            showMessage('perfect!')
+                                .then(() => reStartGame())
                         } else {
-                            // console.log(`currentGuessRowIndex: ${currentGuessRowIndex}, totalGuesses: ${totalGuesses}, body.step: ${body.step}`)
-                            if (currentGuessRowIndex >= totalGuesses || body.step == 'LOSS') {
+                            // console.log(`currentGuessRowIndex: ${currentGuessRowIndex}, totalGuesses: ${totalGuesses}, currentMatchData.step: ${currentMatchData.step}`)
+                            if (currentGuessRowIndex >= totalGuesses || 'LOSS' === currentMatchData.step) {
                                 gameIsOver = true
-                                showMessage('Game Over')
-                                    .then(() => resetIfNeeded())
+                                showMessage('game over')
+                                    .then(() => reStartGame())
                             }
                             if (currentGuessRowIndex <= totalGuesses) {
                                 currentGuessRowIndex++
@@ -291,22 +250,38 @@ const checkRow = () => {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////// helpers /////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+const showUxErrorMessage = (enhancedResponse) => {
+    if (500 > enhancedResponse.status) {
+        return showMessage(enhancedResponse.body.message)
+    }
+    return showMessage(DEFAULT_UX_ERROR_MESSAGE)
+}
+
+const showInternalErrorMessage = (error) => {
+    console.log(error)
+    if (!error.message) {
+        console.log(`No message present. "error.message: ${error.message}"`)
+    }
+}
+
 const handleClick = (clickedLetter) => {
     if (!gameIsOver) {
-        if (clickedLetter === DELETE_KEY) {
+        if (DELETE_KEY === clickedLetter) {
             deleteLetter()
             return
         }
-        if (clickedLetter === ENTER_KEY) {
+        if (ENTER_KEY === clickedLetter) {
             checkRow()
             return
         }
         addLetter(clickedLetter)
     }
-}
-
-const findGuessElementLetterByRowIndexAndLetterIndex = (rowIndex, letterIndex) => {
-    return document.getElementById('guess-row-' + rowIndex + '-guess-letter-' + letterIndex)
 }
 
 const addLetter = (clickedLetter) => {
@@ -341,13 +316,8 @@ const showMessage = (message) => {
     )
 }
 
-const addColorToKey = (keyLetter, color) => {
-    const key = document.getElementById(keyLetter)
-    key.classList.add(color)
-}
-
 const flipAllGuessLetters = (currentState) => {
-    return currentState.forEach((guess, guessIndex) => {
+    currentState.forEach((guess, guessIndex) => {
         flipGuessLetters(guess.guessStateRowList, guess.id)
     })
 }
@@ -359,9 +329,9 @@ const flipGuessLetters = (guessStateRowList, guessId) => {
         guessData.push({letter: guessLetter.getAttribute('typed-letter'), color: 'grey-overlay'})
     })
     guessStateRowList.forEach((letterState, letterStateIndex) => {
-        if ("CORRECT" == letterState.state) {
+        if ("CORRECT" === letterState.state) {
             guessData[letterStateIndex].color = 'green-overlay'
-        } else if ("CONTAIN" == letterState.state) {
+        } else if ("CONTAIN" === letterState.state) {
             guessData[letterStateIndex].color = 'yellow-overlay'
         }
     })
@@ -376,4 +346,113 @@ const flipGuessLetters = (guessStateRowList, guessId) => {
     })
 }
 
-resetIfNeeded()
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////// utils ///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+const toggleFullScreen = () => {
+  if (!document.fullscreenElement &&    // alternative standard method
+      !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    } else if (document.documentElement.msRequestFullscreen) {
+      document.documentElement.msRequestFullscreen();
+    } else if (document.documentElement.mozRequestFullScreen) {
+      document.documentElement.mozRequestFullScreen();
+    } else if (document.documentElement.webkitRequestFullscreen) {
+      document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
+  }
+}
+
+const sleep = (ms) => {
+    return new Promise((resolve, reject) => setTimeout(resolve, ms));
+}
+
+const getResponseBody = (response) => {
+    handleUnauthorisedSession(response)
+    return ((r) => r.json())(response)
+        .then(body => {
+            return {
+                response: response,
+                status: response.status,
+                body: body
+            }
+        })
+        .then(enhancedResponse => {
+            if (400 <= enhancedResponse.status) {
+                showUxErrorMessage(enhancedResponse)
+            }
+            return enhancedResponse.body
+        })
+        .catch(error => {
+            // console.log('Not possible to get response body properly because of the following exception')
+            console.log(error)
+        })
+}
+
+const fetchWithTimeout = (url, options={}) => {
+    const { timeout = DEFAULT_REQUEST_TIMEOUT } = options
+    const { handler = null } = options
+    return Promise.race([
+        fetch(url, options),
+        new Promise((resolve, reject) =>
+            setTimeout(() => reject(new Error('Request timeout')), timeout)
+        )
+    ])
+        // .catch(error => handler())
+}
+
+const findGuessElementLetterByRowIndexAndLetterIndex = (rowIndex, letterIndex) => {
+    return document.getElementById('guess-row-' + rowIndex + '-guess-letter-' + letterIndex)
+}
+
+const addColorToKey = (keyLetter, color) => {
+    const key = document.getElementById(keyLetter)
+    key.classList.add(color)
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////// main ////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+const reStartGame = () => {
+    guessDataRows = [
+        ['', '', '', '', ''],
+        ['', '', '', '', ''],
+        ['', '', '', '', ''],
+        ['', '', '', '', ''],
+        ['', '', '', '', ''],
+        ['', '', '', '', '']
+    ]
+    wordSize = 5
+    totalGuesses = 5
+    currentGuessRowIndex = 0
+    currentGuessLetterIndex = 0
+    gameIsOver = false
+    showMessage('new match')
+    resetGameScreen()
+    updateContextHeader()
+        .then(() => recoverGameState())
+}
+
+const startGame = () => {
+    buildGameScreen()
+    updateContextHeader()
+}
+
+reStartGame()

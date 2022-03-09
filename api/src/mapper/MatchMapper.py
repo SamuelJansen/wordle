@@ -1,8 +1,9 @@
 from python_helper import ObjectHelper
 from python_framework import Mapper, MapperMethod
 
-import Match
+from enumeration.MatchStep import MatchStep
 from dto import MatchDto, GuessStateDto
+import Match
 
 @Mapper()
 class MatchMapper:
@@ -27,3 +28,7 @@ class MatchMapper:
         self.mapper.guess.overrideGuessStatesResponseDto(model, dto)
         dto.wordSize = len(model.word)
         return dto
+
+    @MapperMethod(requestClass=[Match.Match])
+    def overrideStepToAbandoned(model):
+        model.step = MatchStep.ABANDONED

@@ -1,8 +1,10 @@
 from python_framework import SqlAlchemyProxy as sap
+from python_framework import ConverterStatic
 
-from ModelAssociation import REQUEST_DATA, USER, GUESS, MATCH, MODEL
+from ModelAssociation import MATCH, GUESS_EVENT, USER, MODEL
 from util import AuditoryUtil, ModelUtil
-from constant import UserConstant
+from constant import GuessEventConstant
+from enumeration.GuessEventStatus import GuessEventStatus
 
 
 GIANT_STRING_SIZE = 16384
@@ -12,15 +14,15 @@ MEDIUM_STRING_SIZE = 128
 LITTLE_STRING_SIZE = 64
 
 
-class User(MODEL):
-    __tablename__ = USER
+class GuessEvent(MODEL):
+    __tablename__ = GUESS_EVENT
 
     id = sap.Column(sap.Integer(), sap.Sequence(f'{__tablename__}{sap.ID}{sap.SEQ}'), primary_key=True)
-    name = sap.Column(sap.String(MEDIUM_STRING_SIZE), default=UserConstant.DEFAUTL_USER_NAME)
+    word = sap.Column(sap.String(LITTLE_STRING_SIZE), nullable=False)
+    status = sap.Column(sap.String(LITTLE_STRING_SIZE), nullable=False, default=GuessEventConstant.DEFAULT_STATUS)
 
-    requestDataList = sap.getOneToMany(USER, REQUEST_DATA, MODEL)
-    matchList = sap.getOneToMany(USER, MATCH, MODEL)
-    guessList = sap.getOneToMany(USER, GUESS, MODEL)
+    userId = sap.Column(sap.Integer())
+    matchId = sap.Column(sap.Integer())
 
     createdAt = sap.Column(sap.DateTime, nullable=False)
     updatedAt = sap.Column(sap.DateTime, nullable=False)
@@ -29,20 +31,20 @@ class User(MODEL):
 
     def __init__(self,
         id = None,
-        name = None,
-        requestDataList = None,
-        matchList = None,
-        guessList = None,
+        word = None,
+        status = None,
+        userId = None,
+        matchId = None,
         createdAt = None,
         updatedAt = None,
         createdBy = None,
         updatedBy = None
     ):
         self.id = id
-        self.name = name
-        self.requestDataList = ModelUtil.getOneToManyData(requestDataList)
-        self.matchList = ModelUtil.getOneToManyData(matchList)
-        self.guessList = ModelUtil.getOneToManyData(guessList)
+        self.word = word
+        self.status = ConverterStatic.getValueOrDefault(GuessEventStatus.map(status), GuessEventConstant.DEFAULT_STATUS)
+        self.userId = userId
+        self.matchId = matchId
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.createdBy = createdBy
@@ -50,4 +52,4 @@ class User(MODEL):
         AuditoryUtil.overrideSessionData(self)
 
     def __repr__(self):
-        return f'{self.__tablename__}(id: {self.id}, name: {self.name}, len(guessList): {len(self.guessList)}, len(matchList): {len(self.matchList)}, len(requestDataList): {len(self.requestDataList)})'
+        return f'{self.__tablename__}(id: {self.id}, word: {self.word}, userId: {self.userId}, matchId: {self.matchId}, status: {self.status})'

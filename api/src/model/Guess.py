@@ -3,8 +3,6 @@ from python_framework import ConverterStatic
 
 from ModelAssociation import MATCH, GUESS, USER, MODEL
 from util import AuditoryUtil, ModelUtil
-from constant import GuessConstant
-from enumeration.GuessStatus import GuessStatus
 
 
 GIANT_STRING_SIZE = 16384
@@ -19,7 +17,6 @@ class Guess(MODEL):
 
     id = sap.Column(sap.Integer(), sap.Sequence(f'{__tablename__}{sap.ID}{sap.SEQ}'), primary_key=True)
     word = sap.Column(sap.String(LITTLE_STRING_SIZE), nullable=False)
-    status = sap.Column(sap.String(LITTLE_STRING_SIZE), nullable=False, default=GuessConstant.DEFAULT_GUESS_STATUS)
 
     user, userId = sap.getManyToOne(GUESS, USER, MODEL)
     match, matchId = sap.getManyToOne(GUESS, MATCH, MODEL)
@@ -32,7 +29,6 @@ class Guess(MODEL):
     def __init__(self,
         id = None,
         word = None,
-        status = None,
         user = None,
         userId = None,
         match = None,
@@ -44,7 +40,6 @@ class Guess(MODEL):
     ):
         self.id = id
         self.word = word
-        self.status = ConverterStatic.getValueOrDefault(GuessStatus.map(status), GuessConstant.DEFAULT_GUESS_STATUS)
         self.user, self.userId = ModelUtil.getManyToOneData(user, userId, MODEL)
         self.match, self.matchId = ModelUtil.getManyToOneData(match, matchId, MODEL)
         self.createdAt = createdAt
@@ -54,4 +49,4 @@ class Guess(MODEL):
         AuditoryUtil.overrideSessionData(self)
 
     def __repr__(self):
-        return f'{self.__tablename__}(id: {self.id}, word: {self.word}, userId: {self.userId}, matchId: {self.matchId}, status: {self.status})'
+        return f'{self.__tablename__}(id: {self.id}, word: {self.word}, userId: {self.userId}, matchId: {self.matchId})'

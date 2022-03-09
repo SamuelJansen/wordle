@@ -1,15 +1,11 @@
-from sqlalchemy.sql import func
-from sqlalchemy.orm import load_only
-
 from python_helper import ObjectHelper
 from python_framework import SqlAlchemyProxy as sap
 from python_framework import Repository
 
-import Word
+import GuessEvent
 
-
-@Repository(model = Word.Word)
-class WordRepository:
+@Repository(model = GuessEvent.GuessEvent)
+class GuessEventRepository:
 
     def findAll(self) :
         return self.repository.findAllAndCommit(self.model)
@@ -37,11 +33,3 @@ class WordRepository:
         modelList = self.repository.session.query(self.model).filter(self.model.id.in_(idList)).all()
         self.repository.session.commit()
         return modelList
-
-    def findAllByTextIn(self, textList):
-        modelList = self.repository.session.query(self.model).filter(self.model.text.in_(textList)).all()
-        self.repository.session.commit()
-        return modelList
-
-    def getRandomWordList(self, amount, length):
-        return self.repository.session.query(self.model).filter(self.model.length == length).order_by(func.random()).limit(amount).all()
