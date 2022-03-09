@@ -1,3 +1,4 @@
+from python_helper import log
 from python_framework import Validator, ValidatorMethod, GlobalException, HttpStatus
 
 import Match
@@ -8,7 +9,24 @@ class WordValidator:
 
     @ValidatorMethod(requestClass=[dict])
     def validateWordText(self, wordText):
-        self.validateWordDataClientResponse(self.service.word.getWordData(wordText), wordText)
+        wordDataClientResponse = None
+        try:
+            wordDataClientResponse = self.service.word.getWordData(wordText)
+        except Exception as exception:
+            log.failure(self.validateWordText, "Fix this right away pelase. Returning wordValid=True for wathever...", exception)
+            return
+        # except GlobalException as exception:
+        #     raise GlobalException(
+        #         message = f'This word does not exists',
+        #         logMessage = f'The word "{wordText}" does not exists. Client message: {exception.message}',
+        #         status = HttpStatus.BAD_REQUEST
+        #     )
+        # except Exception as exception:
+        #     raise GlobalException(
+        #         logMessage = f'Error at lient call. Exception message: {str(exception)}',
+        #         status = HttpStatus.INTERNAL_SERVER_ERROR
+        #     )
+        self.validateWordDataClientResponse(wordDataClientResponse, wordText)
 
 
     @ValidatorMethod(requestClass=[dict, str])
