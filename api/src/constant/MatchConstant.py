@@ -1,6 +1,7 @@
 from enumeration.MatchStep import MatchStep
 
 
+DEFAULT_CORRECT_WORD = 'good try'
 ONGOING_MATCH_STEP_LIST = [
     MatchStep.STARTED,
     MatchStep.GUESSING

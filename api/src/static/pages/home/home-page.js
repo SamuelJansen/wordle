@@ -234,7 +234,7 @@ const checkRow = () => {
                             // console.log(`currentGuessRowIndex: ${currentGuessRowIndex}, totalGuesses: ${totalGuesses}, currentMatchData.step: ${currentMatchData.step}`)
                             if (currentGuessRowIndex >= totalGuesses || 'LOSS' === currentMatchData.step) {
                                 gameIsOver = true
-                                showMessage('game over')
+                                showMessage(`aawww... the word was "${currentMatchData.correctWord}"`)
                                     .then(() => reStartGame())
                             }
                             if (currentGuessRowIndex <= totalGuesses) {
@@ -270,6 +270,20 @@ const showInternalErrorMessage = (error) => {
     }
 }
 
+const showMessage = (message) => {
+    if (message) {
+        const messageElement = document.createElement('p')
+        messageElement.textContent = message.toLowerCase()
+        messageDisplay.append(messageElement)
+        return new Promise((resolve, reject) =>
+            setTimeout(() => {
+                messageDisplay.removeChild(messageElement)
+                return resolve()
+            }, DEFAULT_MESSAGE_TIME_DURATIONT)
+        )
+    }
+}
+
 const handleClick = (clickedLetter) => {
     if (!gameIsOver) {
         if (DELETE_KEY === clickedLetter) {
@@ -302,18 +316,6 @@ const deleteLetter = () => {
         guessDataRows[currentGuessRowIndex][currentGuessLetterIndex] = ''
         guessLetter.setAttribute('typed-letter', '')
     }
-}
-
-const showMessage = (message) => {
-    const messageElement = document.createElement('p')
-    messageElement.textContent = message
-    messageDisplay.append(messageElement)
-    return new Promise((resolve, reject) =>
-        setTimeout(() => {
-            messageDisplay.removeChild(messageElement)
-            return resolve()
-        }, DEFAULT_MESSAGE_TIME_DURATIONT)
-    )
 }
 
 const flipAllGuessLetters = (currentState) => {
