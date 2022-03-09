@@ -15,7 +15,6 @@ class GuessService:
         except Exception as exception:
             self.service.guessEvent.createInvalidGuess(wordGuess, userId=match.user.id, matchId=match.id)
             raise exception
-        self.service.word.createOrUpdateByText(wordGuess)
         return self.persist(Guess.Guess(word=wordGuess, user=match.user, match=match))
 
 
