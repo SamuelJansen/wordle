@@ -33,7 +33,7 @@ class MatchService:
                 totalGuesses = MatchConfig.DEFAUTL_TOTAL_GUESSES,
                 step = MatchConstant.INITIAL_STEP
             )
-        return self.mapAndReturn(model, MatchConstant.DEFAULT_CORRECT_WORD)
+        return model
 
 
     @ServiceMethod(requestClass=[User.User, str])
