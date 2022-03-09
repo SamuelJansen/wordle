@@ -15,7 +15,7 @@ class MatchService:
     def abandon(self):
         model = self.findCurrentMatchByUserId(self.service.session.getContextId())
         self.mapper.match.overrideStepToAbandoned(model)
-        return self.persist(model)
+        return self.mapper.match.fromModelToResponseDto(self.persist(model))
 
 
     @ServiceMethod(requestClass=[User.User])
@@ -42,14 +42,17 @@ class MatchService:
         self.validator.match.validateWordGuess(wordGuess, model)
         guess = self.service.guess.createModel(wordGuess, model)
         if guess not in model.guessList:
-            model.guessList.append()
+            model.guessList.append(guess)
+        correctWord = MatchConstant.DEFAULT_CORRECT_WORD
         if model.step not in MatchConstant.END_MATCH_STEP_LIST:
-             model.step = MatchStep.GUESSING
-        if model.word == wordGuess:
-            model.step = MatchStep.VICTORY
-        if len(model.guessList) > model.totalGuesses and model.step not in MatchConstant.END_MATCH_STEP_LIST:
-            model.step = MatchStep.LOSS
-        return self.mapper.match.fromModelToResponseDto(self.persist(model))
+            model.step = MatchStep.GUESSING
+            correctWord = model.word
+        else:
+            if model.word == wordGuess:
+                model.step = MatchStep.VICTORY
+            if len(model.guessList) > model.totalGuesses and model.step not in MatchConstant.END_MATCH_STEP_LIST:
+                model.step = MatchStep.LOSS
+        return self.mapper.match.fromModelToResponseDto(self.persist(model), correctWord)
 
 
     @ServiceMethod(requestClass=[int])

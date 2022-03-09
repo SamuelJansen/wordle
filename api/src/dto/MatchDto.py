@@ -22,7 +22,8 @@ class MatchResponseDto:
         step = None,
         user = None,
         guessList = None,
-        guessStates = None
+        guessStates = None,
+        correctWord = None
     ):
         self.id = id
         self.context = context
@@ -32,3 +33,4 @@ class MatchResponseDto:
         self.user = user
         self.guessList = guessList
         self.guessStates = guessStates
+        self.correctWord = correctWord

@@ -12,7 +12,7 @@ class MatchController:
         contextRequired = [MatchContext.USER],
         responseClass = [MatchDto.MatchResponseDto]
         # , logRequest = True
-        , logResponse = True
+        # , logResponse = True
     )
     def get(self, params=None):
         return self.service.game.updateGuess(params), HttpStatus.OK
@@ -22,16 +22,17 @@ class MatchController:
         contextRequired = [MatchContext.USER],
         responseClass = [MatchDto.MatchResponseDto]
         # , logRequest = True
-        , logResponse = True
+        # , logResponse = True
     )
     def post(self):
         return self.service.game.findOrCreateMatch(), HttpStatus.CREATED
 
 
     @ControllerMethod(url = '/match',
-        contextRequired = [MatchContext.USER]
+        contextRequired = [MatchContext.USER],
+        responseClass = [MatchDto.MatchResponseDto]
         # , logRequest = True
-        , logResponse = True
+        # , logResponse = True
     )
     def delete(self):
         return self.service.game.abandonMatch(), HttpStatus.DELETED

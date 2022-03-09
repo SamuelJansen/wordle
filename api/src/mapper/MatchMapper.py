@@ -13,8 +13,10 @@ class MatchMapper:
         return modelList
 
 
-    @MapperMethod(requestClass=[[Match.Match]], responseClass=[[MatchDto.MatchResponseDto]])
-    def fromModelListToResponseDtoList(self, modelList, dtoList):
+    @MapperMethod(requestClass=[[Match.Match], str], responseClass=[[MatchDto.MatchResponseDto]])
+    def fromModelListToResponseDtoList(self, modelList, correctWord, dtoList):
+        for dto in dtoList:
+            dto.correctWord = correctWord
         return dtoList
 
 
@@ -23,10 +25,11 @@ class MatchMapper:
         return model
 
 
-    @MapperMethod(requestClass=[Match.Match], responseClass=[MatchDto.MatchResponseDto])
-    def fromModelToResponseDto(self, model, dto):
+    @MapperMethod(requestClass=[Match.Match, str], responseClass=[MatchDto.MatchResponseDto])
+    def fromModelToResponseDto(self, model, correctWord, dto):
         self.mapper.guess.overrideGuessStatesResponseDto(model, dto)
         dto.wordSize = len(model.word)
+        det.correctWord = correctWord
         return dto
 
     @MapperMethod(requestClass=[Match.Match])
