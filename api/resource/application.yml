@@ -40,7 +40,7 @@ word:
         api-key: ${WORD_DATA_API_KEY:default}
         rapid-host: ${WORD_DATA_RAPID_HOST:default}
         base-url: ${WORD_DATA_BASE_URL:defautl}
-        default-timeout-in-seconds: 1
+        default-timeout-in-seconds: 3
 
 match:
     word-lenght: 5
