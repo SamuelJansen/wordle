@@ -44,13 +44,15 @@ body {
 }
 
 .title-container-block button {
+    max-height: 30px;
     font-size: 12px;
     position: relative;
     left: 25%;
     text-decoration-color: white;
     background-color: #818384;
-    border-radius: 10px;
-    padding: 6px;
+    border-radius: 4px;
+    padding-left: 6px;
+    padding-right: 6px;
     margin: 0;
 }
 
@@ -67,10 +69,10 @@ body {
     padding: 10px;
     margin: 0;
     background-color: #818384;
+    position: relative;
 }
 
 .guess-container {
-    /* background-color: #121213; */
     width: 100%;
     max-width: 430px;
     margin-bottom: 30px;

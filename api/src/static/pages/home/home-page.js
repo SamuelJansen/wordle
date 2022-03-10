@@ -1,6 +1,6 @@
+const messageDisplay = document.querySelector('.message-container')
 const guessDisplay = document.querySelector('.guess-container')
 const keyboard = document.querySelector('.keyboard-container')
-const messageDisplay = document.querySelector('.message-container')
 
 const WORDLE_API_BASE_URL = `${document.URL}/api`
 const DEFAULT_REQUEST_TIMEOUT = 5000
@@ -286,7 +286,7 @@ const showUxErrorMessage = (enhancedResponse) => {
         return showMessage(enhancedResponse.body.message)
     }
     showMessage(DEFAULT_UX_ERROR_MESSAGE)
-    return resetBoard()
+    resetBoard()
 }
 
 const showInternalErrorMessage = (error) => {
@@ -297,8 +297,8 @@ const showInternalErrorMessage = (error) => {
 }
 
 const showMessage = (message, options={}) => {
-    const { timeout = DEFAULT_MESSAGE_TIME_DURATIONT } = options
     if (message) {
+        const { timeout = DEFAULT_MESSAGE_TIME_DURATIONT } = options
         const messageElement = document.createElement('p')
         messageElement.textContent = message.toLowerCase()
         messageDisplay.append(messageElement)
@@ -323,7 +323,7 @@ const handleClickAnimation = (keyboardKey, clickedLetter) => {
         }
         let originalFontSize = keyboardKey.style.fontSize
         keyboardKey.style.fontSize = '8px'
-        sleep(80)
+        return sleep(80)
             .then(() => {
                 keyboardKey.style.fontSize = originalFontSize
             })
@@ -332,7 +332,7 @@ const handleClickAnimation = (keyboardKey, clickedLetter) => {
                 keyboardKey.classList.remove('clicked')
             })
     } else {
-        sleep(300)
+        return sleep(300)
             .then(() => keyboardKey.classList.remove('clicked'))
     }
 }
@@ -370,6 +370,19 @@ const deleteLetter = () => {
         guessDataRows[currentGuessRowIndex][currentGuessLetterIndex] = ''
         guessLetter.setAttribute('typed-letter', '')
     }
+}
+
+var forceRedraw = function(element){
+    if (!element) { return; }
+    const n = document.createTextNode(' ');
+    const disp = element.style.display;
+    element.appendChild(n);
+    element.style.display = 'none';
+    console.log("here");
+    setTimeout(() => {
+        element.style.display = disp;
+        n.parentNode.removeChild(n);
+    }, 10);
 }
 
 const flipAllGuessLetters = (currentState) => {
