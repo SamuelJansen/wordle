@@ -498,6 +498,7 @@ const setInitialState = () => {
 }
 
 const resetBoardDataAndRecoverGameState = () => {
+    resetBoardData()
     return recoverGameState()
 }
 
