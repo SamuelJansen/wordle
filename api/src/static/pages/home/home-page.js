@@ -199,22 +199,6 @@ const getCurrentState = () => {
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-// var forceRedraw = function(element){
-//
-//     if (!element) { return; }
-//
-//     var n = document.createTextNode(' ');
-//     var disp = element.style.display;  // don't worry about previous display style
-//
-//     element.appendChild(n);
-//     element.style.display = 'none';
-//
-//     setTimeout(function(){
-//         element.style.display = disp;
-//         n.parentNode.removeChild(n);
-//     },200); // you can play with this timeout to make it as short as possible
-// }
-
 const recoverGameState = () => {
     let currentMatchData = null
     return getCurrentState()
@@ -381,11 +365,6 @@ const flipAllGuessLetters = (currentState) => {
     currentState.forEach((guess, guessIndex) => {
         flipGuessLetters(guess.guessStateRowList, guess.id)
     })
-
-    // messageDisplay.childNodes.forEach((item, i) => {
-    //     forceRedraw(item)
-    // });
-
 }
 
 const flipGuessLetters = (guessStateRowList, guessId) => {
