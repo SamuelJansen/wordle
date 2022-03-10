@@ -271,6 +271,9 @@ const checkRow = () => {
             })
             .catch(error => showInternalErrorMessage(error))
     }
+    else {
+        showMessage('complete the word', timeout=2000)
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -294,7 +297,8 @@ const showInternalErrorMessage = (error) => {
     }
 }
 
-const showMessage = (message) => {
+const showMessage = (message, options={}) => {
+    const { timeout = DEFAULT_MESSAGE_TIME_DURATIONT } = options
     if (message) {
         const messageElement = document.createElement('p')
         messageElement.textContent = message.toLowerCase()
@@ -303,7 +307,7 @@ const showMessage = (message) => {
             setTimeout(() => {
                 messageDisplay.removeChild(messageElement)
                 return resolve()
-            }, DEFAULT_MESSAGE_TIME_DURATIONT)
+            }, timeout)
         )
     }
 }
