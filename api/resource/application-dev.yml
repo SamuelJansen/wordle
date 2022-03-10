@@ -6,6 +6,9 @@ api:
         settings:
             check_same_thread: False
 
+match:
+    duration-in-minutes: 30
+    
 swagger:
     schemes: [https]
     host: ${SWAGGER_HOST:localhost}

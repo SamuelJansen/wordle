@@ -3,7 +3,7 @@ const keyboard = document.querySelector('.keyboard-container')
 const messageDisplay = document.querySelector('.message-container')
 
 const WORDLE_API_BASE_URL = `${document.URL}/api`
-const DEFAULT_REQUEST_TIMEOUT = 3000
+const DEFAULT_REQUEST_TIMEOUT = 5000
 const SMALL_TIMEOUT = DEFAULT_REQUEST_TIMEOUT / 5
 const DEFAULT_ANIMATION_TIMEOUT = 200
 const DEFAULT_MESSAGE_TIME_DURATIONT = 5000
@@ -229,15 +229,23 @@ const recoverGameState = () => {
 
 const checkRow = () => {
     const wordGuess = guessDataRows[currentGuessRowIndex].join('')
-    let currentState = null
+    let currentMatchData = null
     if (currentGuessLetterIndex >= wordSize) {
         return fetchWithTimeout(`${WORDLE_API_BASE_URL}/match/verify?word=${wordGuess}`, {
             method: 'PATCH',
             headers: DEFAULT_HEADERS
         })
             .then((response) => getResponseBody(response))
-            .then(currentMatchData => {
-                currentState = currentMatchData.guessStates
+
+            .then((matchDataResponse) => {
+                currentMatchData = matchDataResponse
+                return currentMatchData.guessStates
+            })
+            .then((currentState) => {
+                if (0 < currentState.length && currentGuessRowIndex >= currentState.length) {
+                    resetBoardDataAndRecoverGameState()
+                    throw new Error('Delayed response...')
+                }
                 currentState.forEach((guess, guessIndex) => {
                     if (currentGuessRowIndex === guess.id) {
                         flipGuessLetters(guess.guessStateRowList, guess.id)
