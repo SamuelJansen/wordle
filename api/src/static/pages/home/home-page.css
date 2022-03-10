@@ -63,14 +63,14 @@ body {
 }
 
 .message-container p {
-    background-color: #818384;
     border-radius: 10px;
     padding: 10px;
     margin: 0;
-    z-index: 10;
+    background-color: #818384;
 }
 
 .guess-container {
+    /* background-color: #121213; */
     width: 100%;
     max-width: 430px;
     margin-bottom: 30px;

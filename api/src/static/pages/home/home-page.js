@@ -3,7 +3,7 @@ const keyboard = document.querySelector('.keyboard-container')
 const messageDisplay = document.querySelector('.message-container')
 
 const WORDLE_API_BASE_URL = `${document.URL}/api`
-const DEFAULT_REQUEST_TIMEOUT = 5000
+const DEFAULT_REQUEST_TIMEOUT = 3000
 const SMALL_TIMEOUT = DEFAULT_REQUEST_TIMEOUT / 5
 const DEFAULT_ANIMATION_TIMEOUT = 200
 const DEFAULT_MESSAGE_TIME_DURATIONT = 5000
@@ -199,6 +199,22 @@ const getCurrentState = () => {
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
+// var forceRedraw = function(element){
+//
+//     if (!element) { return; }
+//
+//     var n = document.createTextNode(' ');
+//     var disp = element.style.display;  // don't worry about previous display style
+//
+//     element.appendChild(n);
+//     element.style.display = 'none';
+//
+//     setTimeout(function(){
+//         element.style.display = disp;
+//         n.parentNode.removeChild(n);
+//     },200); // you can play with this timeout to make it as short as possible
+// }
+
 const recoverGameState = () => {
     let currentMatchData = null
     return getCurrentState()
@@ -231,7 +247,7 @@ const checkRow = () => {
     const wordGuess = guessDataRows[currentGuessRowIndex].join('')
     let currentState = null
     if (currentGuessLetterIndex >= wordSize) {
-        return fetch(`${WORDLE_API_BASE_URL}/match/verify?word=${wordGuess}`, {
+        return fetchWithTimeout(`${WORDLE_API_BASE_URL}/match/verify?word=${wordGuess}`, {
             method: 'PATCH',
             headers: DEFAULT_HEADERS
         })
@@ -303,10 +319,12 @@ const showMessage = (message) => {
 const handleClickAnimation = (keyboardKey, clickedLetter) => {
     keyboardKey.classList.add('clicked')
     if (ENTER_KEY === clickedLetter || DELETE_KEY === clickedLetter) {
-        if (ENTER_KEY == clickedLetter) {
-            keyboardKey.disabled = true;
+        if (ENTER_KEY === clickedLetter) {
+            keyboardKey.disabled = true
             sleep(1500)
-                .then(() => keyboardKey.disabled = False)
+                .then(() => {
+                    keyboardKey.disabled = false
+                })
         }
         let originalFontSize = keyboardKey.style.fontSize
         keyboardKey.style.fontSize = '8px'
@@ -363,6 +381,11 @@ const flipAllGuessLetters = (currentState) => {
     currentState.forEach((guess, guessIndex) => {
         flipGuessLetters(guess.guessStateRowList, guess.id)
     })
+
+    // messageDisplay.childNodes.forEach((item, i) => {
+    //     forceRedraw(item)
+    // });
+
 }
 
 const flipGuessLetters = (guessStateRowList, guessId) => {
