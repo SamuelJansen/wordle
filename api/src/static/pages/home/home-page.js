@@ -462,7 +462,7 @@ const fetchWithTimeout = (url, options={}) => {
             setTimeout(() => reject(new Error('Request timeout')), timeout)
         )
     ])
-        // .catch(error => handler())
+        .catch(error => handler())
 }
 
 const findGuessElementLetterByRowIndexAndLetterIndex = (rowIndex, letterIndex) => {
