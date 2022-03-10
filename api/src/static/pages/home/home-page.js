@@ -234,10 +234,9 @@ const checkRow = () => {
         return fetchWithTimeout(`${WORDLE_API_BASE_URL}/match/verify?word=${wordGuess}`, {
             method: 'PATCH',
             headers: DEFAULT_HEADERS,
-            handler: recoverGameState
+            handler: resetBoardDataAndRecoverGameState
         })
             .then((response) => getResponseBody(response))
-
             .then((matchDataResponse) => {
                 currentMatchData = matchDataResponse
                 return currentMatchData.guessStates
