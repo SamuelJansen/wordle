@@ -234,7 +234,7 @@ const checkRow = () => {
         return fetchWithTimeout(`${WORDLE_API_BASE_URL}/match/verify?word=${wordGuess}`, {
             method: 'PATCH',
             headers: DEFAULT_HEADERS,
-            handler: resetBoardDataAndRecoverGameState
+            handler: getCurrentState
         })
             .then((response) => getResponseBody(response))
             .then((matchDataResponse) => {
@@ -249,12 +249,11 @@ const checkRow = () => {
                 currentState.forEach((guess, guessIndex) => {
                     if (currentGuessRowIndex === guess.id) {
                         flipGuessLetters(guess.guessStateRowList, guess.id)
-                        if (currentMatchData.step === 'VICTORY') {
+                        if ('VICTORY' === currentMatchData.step) {
                             gameIsOver = true
                             showMessage('perfect!')
                                 .then(() => restartMatch())
                         } else {
-                            // console.log(`currentGuessRowIndex: ${currentGuessRowIndex}, totalGuesses: ${totalGuesses}, currentMatchData.step: ${currentMatchData.step}`)
                             if (currentGuessRowIndex >= totalGuesses || 'LOSS' === currentMatchData.step) {
                                 gameIsOver = true
                                 showMessage(`aawww... the word was "${currentMatchData.correctWord}"`)
