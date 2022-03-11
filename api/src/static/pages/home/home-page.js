@@ -210,9 +210,10 @@ const recoverGameState = () => {
         })
         .then((currentState) => {
             if (0 < currentState.length && currentGuessRowIndex >= currentState.length) {
-                resetBoardDataAndRecoverGameState()
+                recoverGameState()
                 throw new Error('Delayed response...')
             }
+            resetBoardData()
             currentGuessRowIndex = currentState.length
             currentState.forEach((guess, guessIndex) => {
                 guess.guessStateRowList.forEach((guessLetter, guessLetterIndex) => {
@@ -233,8 +234,7 @@ const checkRow = () => {
     if (currentGuessLetterIndex >= wordSize) {
         return fetchWithTimeout(`${WORDLE_API_BASE_URL}/match/verify?word=${wordGuess}`, {
             method: 'PATCH',
-            headers: DEFAULT_HEADERS,
-            handler: getCurrentState
+            headers: DEFAULT_HEADERS
         })
             .then((response) => getResponseBody(response))
             .then((matchDataResponse) => {
@@ -243,7 +243,7 @@ const checkRow = () => {
             })
             .then((currentState) => {
                 if (0 < currentState.length && currentGuessRowIndex >= currentState.length) {
-                    resetBoardDataAndRecoverGameState()
+                    recoverGameState()
                     throw new Error('Delayed response...')
                 }
                 currentState.forEach((guess, guessIndex) => {
@@ -268,7 +268,10 @@ const checkRow = () => {
 
                 })
             })
-            .catch(error => showInternalErrorMessage(error))
+            .catch(error => {
+                showInternalErrorMessage(error)
+                recoverGameState()
+            })
     }
     else {
         showMessage('complete the word', timeout=2000)
@@ -478,7 +481,12 @@ const fetchWithTimeout = (url, options={}) => {
             setTimeout(() => reject(new Error('Request timeout')), timeout)
         )
     ])
-        .catch(error => handler())
+        .catch(error => {
+            if (!handler) {
+                throw error
+            }
+            handler()
+        })
 }
 
 const findGuessElementLetterByRowIndexAndLetterIndex = (rowIndex, letterIndex) => {
@@ -513,7 +521,7 @@ const setInitialState = () => {
 }
 
 const resetBoardDataAndRecoverGameState = () => {
-    resetBoardData()
+    // resetBoardData()
     return recoverGameState()
 }
 
@@ -523,7 +531,7 @@ const resetBoardData = () => {
 }
 
 const resetBoard = () => {
-    resetBoardData()
+    // resetBoardData()
     return updateContextHeader()
         .then(() => recoverGameState())
 }
