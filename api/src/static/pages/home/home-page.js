@@ -209,7 +209,9 @@ const recoverGameState = () => {
             return currentMatchData.guessStates
         })
         .then((currentState) => {
-            if (0 < currentState.length && currentGuessRowIndex >= currentState.length) {
+            if (currentGuessRowIndex > currentState.length || currentGuessRowIndex > countFilledGuessDataRows()) {
+                resetBoardData()
+                currentGuessRowIndex = currentState.length
                 recoverGameState()
                 throw new Error('Delayed response...')
             }
@@ -242,7 +244,9 @@ const checkRow = () => {
                 return currentMatchData.guessStates
             })
             .then((currentState) => {
-                if (countFilledGuessDataRows() >= currentState.length) {
+                if (currentGuessRowIndex > currentState.length || currentGuessRowIndex > countFilledGuessDataRows()) {
+                    resetBoardData()
+                    currentGuessRowIndex = currentState.length
                     recoverGameState()
                     throw new Error('Delayed response...')
                 }
@@ -520,11 +524,11 @@ const setInitialState = () => {
     gameIsOver = false
 }
 
-const countFilledGuessDataRows () => {
+const countFilledGuessDataRows = () => {
     if (!guessDataRows) {
         return 0
     }
-    let count == 0
+    let count = 0
     guessDataRows.forEach((item, i) => {
         if ('' != item[0]) {
             count++
