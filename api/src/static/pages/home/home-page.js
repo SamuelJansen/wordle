@@ -242,7 +242,7 @@ const checkRow = () => {
                 return currentMatchData.guessStates
             })
             .then((currentState) => {
-                if (currentGuessRowIndex > currentState.length) {
+                if (countFilledGuessDataRows() >= currentState.length) {
                     recoverGameState()
                     throw new Error('Delayed response...')
                 }
@@ -518,6 +518,19 @@ const setInitialState = () => {
     currentGuessRowIndex = 0
     currentGuessLetterIndex = 0
     gameIsOver = false
+}
+
+const countFilledGuessDataRows () => {
+    if (!guessDataRows) {
+        return 0
+    }
+    let count == 0
+    guessDataRows.forEach((item, i) => {
+        if ('' != item[0]) {
+            count++
+        }
+    });
+    return count
 }
 
 const resetBoardDataAndRecoverGameState = () => {
