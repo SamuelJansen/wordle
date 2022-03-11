@@ -183,8 +183,8 @@ const getCurrentState = () => {
         .then((matchData) => {
             if (firstPageLoad && 0 < matchData.guessStates.length) {
                 showMessage('welcomeback')
-                firstPageLoad = false
             }
+            firstPageLoad = false
             return matchData
         })
         .catch(error => {
