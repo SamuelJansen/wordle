@@ -242,7 +242,7 @@ const checkRow = () => {
                 return currentMatchData.guessStates
             })
             .then((currentState) => {
-                if (0 < currentState.length && currentGuessRowIndex >= currentState.length) {
+                if (currentGuessRowIndex > currentState.length) {
                     recoverGameState()
                     throw new Error('Delayed response...')
                 }
