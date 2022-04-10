@@ -16,8 +16,8 @@ class WordDataClient :
 
     @HttpClientMethod(
         requestClass = [str]
-        , logRequest = True
-        , logResponse = True
+        # , logRequest = True
+        # , logResponse = True
     )
     def getWordData(self, word):
         return self.get(params={"entry":str(word)})

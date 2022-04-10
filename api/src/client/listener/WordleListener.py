@@ -15,8 +15,8 @@ class WordleListener:
 
     @MessageListenerMethod(url = '/api/listener/word',
         requestClass=[dict]
-        , logRequest = True
-        , logResponse = True
+        # , logRequest = True
+        # , logResponse = True
     )
     def acceptWord(self, dto):
         ###- {'wordList':[wordGuess]}
