@@ -11,8 +11,8 @@ class MatchController:
         requestParamClass = WordGuessDto.WordGuessRequestParamDto,
         contextRequired = [MatchContext.USER],
         responseClass = [MatchDto.MatchResponseDto]
-        # , logRequest = True
-        # , logResponse = True
+        , logRequest = True
+        , logResponse = True
     )
     def patch(self, params=None):
         return self.service.game.addGuess(params), HttpStatus.OK
@@ -21,8 +21,8 @@ class MatchController:
     @ControllerMethod(
         contextRequired = [MatchContext.USER],
         responseClass = [MatchDto.MatchResponseDto]
-        # , logRequest = True
-        # , logResponse = True
+        , logRequest = True
+        , logResponse = True
     )
     def post(self):
         return self.service.game.findOrCreateMatch(), HttpStatus.CREATED
@@ -31,8 +31,8 @@ class MatchController:
     @ControllerMethod(
         contextRequired = [MatchContext.USER],
         responseClass = [MatchDto.MatchResponseDto]
-        # , logRequest = True
-        # , logResponse = True
+        , logRequest = True
+        , logResponse = True
     )
     def delete(self):
         return self.service.game.abandonMatch(), HttpStatus.DELETED

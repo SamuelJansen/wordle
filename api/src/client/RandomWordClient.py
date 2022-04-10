@@ -16,6 +16,8 @@ class RandomWordClient :
 
     @HttpClientMethod(
         requestClass = [int, int]
+        , logRequest = True
+        , logResponse = True
     )
     def getRandomWordTextList(self, amount, length):
         return self.get(params={

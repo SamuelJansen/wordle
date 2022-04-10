@@ -19,8 +19,8 @@ class WordleEmitter:
 
     @MessageEmitterMethod(
         queueKey = WordleQueueConfig.EMITTER_CREATE_WORD_QUEUE
-        # , logRequest = True
-        # , logResponse = True
+        , logRequest = True
+        , logResponse = True
         # requestClass=[MessageDto.MessageRequestDto, str],
         # responseClass=[MessageDto.MessageRequestDto]
     )
@@ -30,8 +30,8 @@ class WordleEmitter:
 
     @MessageEmitterMethod(
         queueKey = WordleQueueConfig.EMITTER_CREATE_GUESS_QUEUE
-        # , logRequest = True
-        # , logResponse = True
+        , logRequest = True
+        , logResponse = True
         # requestClass=[MessageDto.MessageRequestDto, str],
         # responseClass=[MessageDto.MessageRequestDto]
     )
