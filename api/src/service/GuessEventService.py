@@ -1,4 +1,4 @@
-from python_framework import Service, ServiceMethod
+from python_framework import Service, ServiceMethod, EnumItem
 
 import GuessEvent
 from enumeration.GuessEventStatus import GuessEventStatus
@@ -7,26 +7,49 @@ from enumeration.GuessEventStatus import GuessEventStatus
 @Service()
 class GuessEventService:
 
+
     @ServiceMethod(requestClass=[str])
-    def createInvalidGuess(self, wordGuess, userId=None, matchId=None):
-        return self.emit(GuessEvent.GuessEvent(
+    def createInvalidGuessEvent(self, wordGuess, userId=None, matchId=None):
+        return self.emitGuessCreationEvent(wordGuess, userId, matchId, GuessEventStatus.INVALID)
+
+
+    @ServiceMethod(requestClass=[GuessEvent.GuessEvent])
+    def createValidGuessEvent(self, wordGuess, userId=None, matchId=None):
+        return self.emitGuessCreationEvent(wordGuess, userId, matchId, GuessEventStatus.VALID)
+
+
+    @ServiceMethod(requestClass=[dict])
+    def createModel(self, dto):
+        return self.persist(
+            GuessEvent.GuessEvent(
+                word = dto.get('wordGuess'),
+                userId = dto.get('userId'),
+                matchId = dto.get('matchId'),
+                status = dto.get('status')
+            )
+        )
+
+
+    @ServiceMethod(requestClass=[str, int, int, EnumItem])
+    def emitGuessCreationEvent(self, wordGuess, userId, matchId, status):
+        return self.emitEvent(GuessEvent.GuessEvent(
             word = wordGuess,
-            status = GuessEventStatus.INVALID,
+            status = status,
             userId = userId,
             matchId = matchId
         ))
 
 
     @ServiceMethod(requestClass=[GuessEvent.GuessEvent])
-    def createValidGuess(self, wordGuess, userId=None, matchId=None):
-        self.emit(GuessEvent.GuessEvent(
-            word = wordGuess,
-            status = GuessEventStatus.VALID,
-            userId = userId,
-            matchId = matchId
-        ))
+    def emitEvent(self, event):
+        return self.emitter.wordle.createGuess({
+            'wordGuess': event.word,
+            'userId': event.userId,
+            'matchId': event.matchId,
+            'status': event.status
+        })
 
 
     @ServiceMethod(requestClass=[GuessEvent.GuessEvent])
-    def emit(self, event):
-        return self.repository.guessEvent.save(event)
+    def persist(self, model):
+        self.repository.guessEvent.save(model)

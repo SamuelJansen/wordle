@@ -21,9 +21,9 @@ class GameService:
 
 
     @ServiceMethod(requestClass=[WordGuessDto.WordGuessRequestParamDto])
-    def updateGuess(self, paramRequestDto):
+    def addGuess(self, paramRequestDto):
         user = self.service.user.findOrCreateModel()
-        return self.service.match.updateGuess(user, paramRequestDto.word)
+        return self.service.match.addGuess(user, paramRequestDto.word)
 
 
     @ServiceMethod()

@@ -9,7 +9,14 @@ api:
             check_same_thread: False
 
 match:
-    duration-in-minutes: 1
+    duration-in-minutes: 3
+
+queue:
+    wordle:
+        emitter:
+            queue-key:
+                create-word: 'wordle-create-word-dev'
+                create-guess: 'wordle-create-guess-dev'
 
 swagger:
     schemes: [${api.server.scheme}] ###- bug

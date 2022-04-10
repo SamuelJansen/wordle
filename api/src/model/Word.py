@@ -36,7 +36,7 @@ class Word(MODEL):
     ):
         self.id = id
         self.text = text
-        self.length = ConverterStatic.getValueOrDefault(length, WordConstant.DEFAULT_LENGTH)
+        self.length = ConverterStatic.getValueOrDefault(length, ConverterStatic.getValueOrDefault(len(text), WordConstant.DEFAULT_LENGTH))
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.createdBy = createdBy

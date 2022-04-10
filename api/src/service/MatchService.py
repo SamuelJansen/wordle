@@ -35,6 +35,7 @@ class MatchService:
             )
         return self.mapAndReturn(model, MatchConstant.DEFAULT_CORRECT_WORD)
 
+
     @ServiceMethod(requestClass=[User.User])
     def findOrCreateModelByUserModel(self, user):
         model = self.findCurrentMatchByUserId(user.id)
@@ -54,7 +55,7 @@ class MatchService:
 
 
     @ServiceMethod(requestClass=[User.User, str])
-    def updateGuess(self, user, wordGuess):
+    def addGuess(self, user, wordGuess):
         model = self.findOrCreateModelByUserModel(user)
         self.validator.match.validateWordGuess(wordGuess, model)
         guess = self.service.guess.createModel(wordGuess, model)
@@ -63,11 +64,12 @@ class MatchService:
         correctWord = MatchConstant.DEFAULT_CORRECT_WORD
         if model.step not in MatchConstant.END_MATCH_STEP_LIST:
             model.step = MatchStep.GUESSING
-            correctWord = model.word
         if model.word == wordGuess:
             model.step = MatchStep.VICTORY
+            correctWord = model.word
         if len(model.guessList) > model.totalGuesses and model.step not in MatchConstant.END_MATCH_STEP_LIST:
             model.step = MatchStep.LOSS
+            correctWord = model.word
         return self.mapAndReturn(model, correctWord)
 
 

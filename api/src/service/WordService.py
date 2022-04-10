@@ -31,16 +31,22 @@ class WordService:
 
     @ServiceMethod(requestClass=[str])
     def createOrUpdateByText(self, text):
-        self.validator.word.validateWordText(text)
-        return self.createOrUpdateAll([text.lower()])[0]
+        return self.createOrUpdateAll([text])[0]
 
 
     @ServiceMethod()
     def getRandomWord(self):
         return RandomHelper.sample(self.getRandomWordTextList(
             RandomWordConfig.WORDS_PER_REQUEST,
-            MatchConfig.WORD_LENGHT
+            MatchConfig.WORD_LENGTH
         )).upper()
+
+
+    @ServiceMethod(requestClass=[[str]])
+    def createOrUpdateByTextListEvent(self, textList):
+        return self.emitter.wordle.createWord({
+            'wordList': textList
+        })
 
 
     @ServiceMethod(requestClass=[[str]])
@@ -50,7 +56,7 @@ class WordService:
         return self.repository.word.saveAll([
             * exixtingModelList,
             * [
-                Word.Word(text=wordText) for wordText in lowerWordTextList if wordText not in [
+                Word.Word(text=wordText, length=len(wordText)) for wordText in lowerWordTextList if wordText not in [
                     model.text for model in exixtingModelList
                 ]
             ]

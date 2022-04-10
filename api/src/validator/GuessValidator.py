@@ -14,6 +14,12 @@ class GuessValidator:
                 logMessage = f'Word guess cannot be None',
                 status = HttpStatus.INTERNAL_SERVER_ERROR
             )
+        if len(wordGuess) > len(match.word):
+            raise GlobalException(
+                message = f'Incorrect length',
+                logMessage = f'The word "{wordGuess}" is larger than the match word "{match.word}"',
+                status = HttpStatus.BAD_REQUEST
+            )
         for guess in match.guessList:
             if guess.word == wordGuess:
                 raise GlobalException(

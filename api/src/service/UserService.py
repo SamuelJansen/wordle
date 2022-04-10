@@ -5,18 +5,15 @@ from dto import UserDto, RequestDataDto
 import User, RequestData
 from util import RequestDataUtil
 
+
 @Service()
 class UserService:
 
     @ServiceMethod()
     def findOrCreateModel(self):
-        requestDataRequestDto = self.service.requestData.getRequestDataRequestDto()
-        model = self.findOrCreateModelByRequestDataRequestDto(requestDataRequestDto)
-        requestData = self.service.requestData.findOrCreateModelByRequestDto(
-            requestDataRequestDto,
-            user = model
-        )
-        return self.persist(model)
+        return self.persist(self.findOrCreateModelByRequestDataRequestDto(
+            self.service.requestData.getRequestDataRequestDto()
+        ))
 
 
     @ServiceMethod(requestClass=[RequestDataDto.RequestDataRequestDto])

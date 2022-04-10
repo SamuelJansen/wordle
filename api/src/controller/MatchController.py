@@ -4,10 +4,10 @@ from enumeration.MatchContext import MatchContext
 from dto import WordGuessDto, MatchDto
 
 
-@Controller(url = '/api', tag='Match', description='Match controller')
+@Controller(url = '/api/match', tag='Match', description='Match controller')
 class MatchController:
 
-    @ControllerMethod(url = '/match/verify',
+    @ControllerMethod(url = '/verify',
         requestParamClass = WordGuessDto.WordGuessRequestParamDto,
         contextRequired = [MatchContext.USER],
         responseClass = [MatchDto.MatchResponseDto]
@@ -15,10 +15,10 @@ class MatchController:
         # , logResponse = True
     )
     def patch(self, params=None):
-        return self.service.game.updateGuess(params), HttpStatus.OK
+        return self.service.game.addGuess(params), HttpStatus.OK
 
 
-    @ControllerMethod(url = '/match',
+    @ControllerMethod(
         contextRequired = [MatchContext.USER],
         responseClass = [MatchDto.MatchResponseDto]
         # , logRequest = True
@@ -28,7 +28,7 @@ class MatchController:
         return self.service.game.findOrCreateMatch(), HttpStatus.CREATED
 
 
-    @ControllerMethod(url = '/match',
+    @ControllerMethod(
         contextRequired = [MatchContext.USER],
         responseClass = [MatchDto.MatchResponseDto]
         # , logRequest = True

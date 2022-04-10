@@ -43,9 +43,21 @@ word:
         default-timeout-in-seconds: 3
 
 match:
-    word-lenght: 5
+    word-length: 5
     duration-in-minutes: 30
     total-guesses: 5
+
+queue:
+    wordle:
+        api-key: ${WORDLE_API_KEY:default.default.default}
+        listener:
+            timeout: 2
+        emitter:
+            url: ${QUEUE_MESSAGE_EMITTER_BASE_URL:https:my-emitter-host/base-url}/message/emitter
+            timeout: 2
+            queue-key:
+                create-word: 'wordle-create-word'
+                create-guess: 'wordle-create-guess'
 
 swagger:
     # schemes: [${api.server.scheme}] ###- bug
