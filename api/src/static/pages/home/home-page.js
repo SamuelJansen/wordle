@@ -13,10 +13,11 @@ const DEFAULT_UX_ERROR_MESSAGE = 'wops! server just stumbeld'
 const DEFAULT_HEADERS = new Headers({
     'Accept': 'application/json',
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'Referer': '*',
+    'Access-Control-Allow-Origin': 'https://game.data-explore.com | *',
+    'Access-Control-Allow-Headers': '*',
+    'Access-Control-Expose-Headers': '*'
     'Referrer-Policy': '*',
-    'referrer': 'https://rapid-api.data-explore.com',
+    'referer': 'https://rapid-api.data-explore.com',
     'origin': 'https://rapid-api.data-explore.com'
 });
 
