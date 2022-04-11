@@ -16,7 +16,8 @@ const DEFAULT_HEADERS = new Headers({
     'Access-Control-Allow-Origin': '*',
     'Referer': '*',
     'Referrer-Policy': '*',
-    'referrer': '*'
+    'referrer': 'https://rapid-api.data-explore.com',
+    'origin': 'https://rapid-api.data-explore.com'
 });
 
 const ENTER_KEY = 'SEND'

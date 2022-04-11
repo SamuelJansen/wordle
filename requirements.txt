@@ -1,1 +1,1 @@
-python_framework<1.0.0,>=0.3.57
+python_framework<1.0.0,>=0.3.58
