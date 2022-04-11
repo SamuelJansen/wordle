@@ -15,7 +15,7 @@ const DEFAULT_HEADERS = new Headers({
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': 'https://game.data-explore.com | *',
     'Access-Control-Allow-Headers': '*',
-    'Access-Control-Expose-Headers': '*'
+    'Access-Control-Expose-Headers': '*',
     'Referrer-Policy': '*',
     'referer': 'https://rapid-api.data-explore.com',
     'origin': 'https://rapid-api.data-explore.com'
