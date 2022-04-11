@@ -2,7 +2,7 @@ const messageDisplay = document.querySelector('.message-container')
 const guessDisplay = document.querySelector('.guess-container')
 const keyboard = document.querySelector('.keyboard-container')
 
-const WORDLE_API_BASE_URL = 'https://rapid-api.data-explore.com/dell-development'//`${document.URL}`.replace('game', 'rapid-api')
+const WORDLE_API_BASE_URL = `${document.URL}`.replace('game', 'rapid-api').replace('wordle', 'wordle-api')
 const WORDLE_BASE_URL = `${document.URL}`
 const DEFAULT_REQUEST_TIMEOUT = 5000
 const SMALL_TIMEOUT = DEFAULT_REQUEST_TIMEOUT / 5
