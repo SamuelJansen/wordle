@@ -13,51 +13,12 @@ api:
         url: https://github.com/SamuelJansen/
         extension: git
 
-    session:
-        secret: ${SESSION_SECRET:default}
-    api-key:
-        secret: ${API_KEY_SECRET:default}
-    security:
-        secret: ${SECURITY_SECRET:default}
     server:
         scheme: http
         host: 0.0.0.0
         port: 6557
         base-url: /wordle
-    scheduler:
-        time-zone: ${SCHEDULER_TIMEZONE:Brazil/East}
-        enable: ${ENABLE_SCHEDULER_API:True}
-        mute-logs: False
 
-word:
-    random:
-        api-key: ${RANDOM_WORD_API_KEY:default}
-        rapid-host: ${RANDOM_WORD_RAPID_HOST:default}
-        base-url: ${RANDOM_WORD_BASE_URL:defautl}
-        default-timeout-in-seconds: 1
-        words-per-request: 20
-    data:
-        api-key: ${WORD_DATA_API_KEY:default}
-        rapid-host: ${WORD_DATA_RAPID_HOST:default}
-        base-url: ${WORD_DATA_BASE_URL:defautl}
-        default-timeout-in-seconds: 3
-
-match:
-    word-length: 5
-    duration-in-minutes: 30
-    total-guesses: 5
-
-queue:
-    wordle:
-        api-key: ${WORDLE_API_KEY:default.default.default}
-        listener:
-            timeout: 2
-        emitter:
-            url: ${QUEUE_MESSAGE_EMITTER_BASE_URL:https:my-emitter-host/base-url}/message/emitter
-            timeout: 2
-            queue-key:
-                create-word: 'wordle-create-word'
-                create-guess: 'wordle-create-guess'
 
 swagger:
     # schemes: [${api.server.scheme}] ###- bug

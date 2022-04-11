@@ -2,7 +2,8 @@ const messageDisplay = document.querySelector('.message-container')
 const guessDisplay = document.querySelector('.guess-container')
 const keyboard = document.querySelector('.keyboard-container')
 
-const WORDLE_API_BASE_URL = `${document.URL}/api`
+const WORDLE_API_BASE_URL = 'https://rapid-api.data-explore.com/dell-development'//`${document.URL}`.replace('game', 'rapid-api')
+const WORDLE_BASE_URL = `${document.URL}`
 const DEFAULT_REQUEST_TIMEOUT = 5000
 const SMALL_TIMEOUT = DEFAULT_REQUEST_TIMEOUT / 5
 const DEFAULT_ANIMATION_TIMEOUT = 200
@@ -12,11 +13,19 @@ const DEFAULT_UX_ERROR_MESSAGE = 'wops! server just stumbeld'
 const DEFAULT_HEADERS = new Headers({
     'Accept': 'application/json',
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*'
+    'Access-Control-Allow-Origin': '*',
+    'Referer': '*',
+    'Referrer-Policy': '*',
+    'referrer': '*'
 });
 
 const ENTER_KEY = 'SEND'
 const DELETE_KEY = 'DEL' // '«'
+const KEYBOARD_SPECIAL_CASES_MAP = {
+    'BACKSPACE': DELETE_KEY,
+    'DELETE': DELETE_KEY,
+    'ENTER': ENTER_KEY,
+}
 const keyboardLineData = [
     [
         {'key': 'Q', 'relatedKeys': []},
@@ -95,6 +104,14 @@ const resetGuessesScreen = () => {
     addGuessesScreen()
 }
 
+document.addEventListener('keydown', (e) => {
+    const upperKey = `${e.key}`.toUpperCase()
+    let upperKeyMap = {}
+    upperKeyMap[upperKey] = upperKey
+    upperKeyMap = { ...upperKeyMap, ...KEYBOARD_SPECIAL_CASES_MAP}
+    handleClick(document.getElementById(upperKeyMap[upperKey]), upperKeyMap[upperKey])
+})
+
 const addKeyboardScreen = () => {
     return keyboardLineData.forEach((keyDataLine, keyDataLineIndex) => {
         const keyboardLine = document.createElement('div')
@@ -105,6 +122,7 @@ const addKeyboardScreen = () => {
             buttonElement.setAttribute('id', keyData.key)
             buttonElement.setAttribute('class', 'keyboard-key')
             buttonElement.addEventListener('click', () => handleClick(buttonElement, keyData.key))
+
             keyboardLine.append(buttonElement)
         });
         keyboard.append(keyboardLine)
