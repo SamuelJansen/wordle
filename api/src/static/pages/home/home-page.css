@@ -84,6 +84,8 @@ body {
 
 .guess-container div {
     display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .guess-container .guess-letter {
@@ -205,9 +207,36 @@ body {
     }
 }
 
+.guess-container .guessed {
+    animation: 0.5s linear guessed-animation;
+}
+
+@keyframes guessed-animation {
+    0% {
+        padding: calc(9%);
+        /* width: calc(49px);
+        height: calc(49px); */
+    }
+    30% {
+        padding: calc(8%);
+        /* width: calc(49px);
+        height: calc(49px); */
+    }
+    70% {
+        padding: calc(3%);
+        /* width: calc(49px);
+        height: calc(49px); */
+    }
+    100% {
+        padding: calc(1%);
+        /* width: calc(49px);
+        height: calc(49px); */
+    }
+}
+
 
 .keyboard-line-container .clicked {
-    animation: .2s linear typing;
+    animation: .3s linear typing;
 }
 
 @keyframes typing {
