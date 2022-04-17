@@ -1,9 +1,9 @@
 print-status: False
 
 api:
-    server:
-        exposed:
-            static-host: ${SERVER_EXPOSED_STAIC_HOST:default}
+    # server:
+    #     exposed:
+    #         static-host: ${SERVER_EXPOSED_STAIC_HOST:default}
     database:
         dialect: ${DATABASE_DIALECT:sqlite}
         settings:
