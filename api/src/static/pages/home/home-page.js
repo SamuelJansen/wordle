@@ -3,8 +3,8 @@ const guessDisplay = document.querySelector('.guess-container')
 const keyboard = document.querySelector('.keyboard-container')
 
 const WORDLE_BASE_URL = `${document.URL}`
-const WORDLE_CDN_URL = `${WORDLE_BASE_URL}`.replace('game', 'cdn')
-const WORDLE_API_BASE_URL = `${WORDLE_BASE_URL}`.replace('game', 'rapid-api').replace('wordle', 'wordle-api')
+const WORDLE_CDN_URL = `${WORDLE_BASE_URL}`.replace('studies', 'cdn')
+const WORDLE_API_BASE_URL = `${WORDLE_BASE_URL}`.replace('studies', 'rapid-api').replace('wordle', 'wordle-api')
 const DEFAULT_REQUEST_TIMEOUT = 8000
 const SMALL_TIMEOUT = DEFAULT_REQUEST_TIMEOUT / 5
 const DEFAULT_ANIMATION_TIMEOUT = 200
