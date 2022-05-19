@@ -2,11 +2,8 @@ const messageDisplay = document.querySelector('.message-container')
 const guessDisplay = document.querySelector('.guess-container')
 const keyboard = document.querySelector('.keyboard-container')
 
-const WORDLE_BASE_URL = 'https://studies.data-explore.com/wordle'
-const WORDLE_CDN_URL = WORDLE_BASE_URL
-
-// const WORDLE_BASE_URL = `${document.URL}`
-// const WORDLE_CDN_URL = `${WORDLE_BASE_URL}`.replace('studies', 'cdn')
+const WORDLE_BASE_URL = `${document.URL}`
+const WORDLE_CDN_URL = `${WORDLE_BASE_URL}`.replace('studies', 'cdn')
 const WORDLE_API_BASE_URL = `${WORDLE_BASE_URL}`.replace('studies', 'rapid-api').replace('wordle', 'wordle-api')
 const DEFAULT_REQUEST_TIMEOUT = 8000
 const SMALL_TIMEOUT = DEFAULT_REQUEST_TIMEOUT / 5
@@ -117,8 +114,6 @@ const newAudio = (url) => {
 }
 
 const play = (audio, checkPlaying=true) => {
-    // console.log(audio);
-    // console.log(checkPlaying);
     if (!checkPlaying && !audio.playing()) {
         audio.play()
     } else if (checkPlaying) {
@@ -126,25 +121,6 @@ const play = (audio, checkPlaying=true) => {
         audio.play()
     }
 }
-
-// const newAudio = (url) => {
-//     const audio = new Audio(url)
-//     audio.load()
-//     audio.volume = 0.3
-//     return audio
-// }
-//
-// const play = (audio, checkPlaying=true) => {
-//     // console.log(audio);
-//     // console.log(checkPlaying);
-//     if (!checkPlaying && audio.paused) {
-//         audio.play()
-//     } else if (checkPlaying) {
-//         audio.pause()
-//         audio.currentTime = 0
-//         audio.play()
-//     }
-// }
 
 const random = (mn, mx) => {
     return Math.random() * (mx - mn) + mn
