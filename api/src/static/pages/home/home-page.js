@@ -161,9 +161,9 @@ const KEY_SOUNDS = [
 ];
 const FLIP_SOUNDS = [
     newAudio(`${WORDLE_CDN_URL}/static/audios/flip_0.mp3`),
-    // newAudio(`${WORDLE_CDN_URL}/static/audios/flip_1.mp3`),
-    // newAudio(`${WORDLE_CDN_URL}/static/audios/flip_2.mp3`),
-    // newAudio(`${WORDLE_CDN_URL}/static/audios/flip_3.mp3`)
+    newAudio(`${WORDLE_CDN_URL}/static/audios/flip_1.mp3`),
+    newAudio(`${WORDLE_CDN_URL}/static/audios/flip_2.mp3`),
+    newAudio(`${WORDLE_CDN_URL}/static/audios/flip_3.mp3`)
 ];
 const ENTER_KEY_SOUND = newAudio(`${WORDLE_CDN_URL}/static/audios/enter.mp3`)
 const DELETE_KEY_SOUND = newAudio(`${WORDLE_CDN_URL}/static/audios/delete.mp3`)
